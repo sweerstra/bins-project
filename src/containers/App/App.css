@@ -1,0 +1,107 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-header {
+  background-color: black; /*#FFC306*/
+  height: 50px;
+  padding: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.App-title { font-size: 1.5em; }
+
+.App-intro { font-size: large; }
+
+.content {
+  display: flex;
+  flex: 1;
+}
+
+.App-sidebar {
+  flex: 0 0 15em;
+  border-right: 3px solid #673AB7;
+}
+
+.categories-search input {
+  color: #673AB7;
+  background-color: black;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 16px;
+  display: block;
+  border: none;
+  border-bottom: 3px solid #673AB7;
+}
+
+.categories-search input:focus,
+.selection-code:focus { outline: none; }
+
+.categories-search ::-webkit-input-placeholder {
+  color: #534a4e;
+}
+
+.categories { }
+
+.category {
+  height: 40px;
+  padding: 8px 16px;
+  /*background-color: #D24545;*/
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.category:hover {
+  color: white;
+  background-color: #673AB7;
+  /*background-color: #B82B2B;*/
+}
+
+.App-content {
+  flex: 1;
+  padding: 0;
+}
+
+.selection-header {
+  padding: 8px 16px;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  border-bottom: 3px solid #673AB7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.selection-code {
+  width: 100%;
+  height: calc(100% - 32px);
+  padding: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  overflow-y: hidden;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+/* #262A34 dark-blue */
+/* #1D202B dark-blue:hover */
+
+/*https://www.bitovi.com/blog/use-flexbox-to-create-a-sticky-header-and-sidebar-with-flexible-content*/

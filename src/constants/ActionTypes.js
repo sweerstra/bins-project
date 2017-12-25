@@ -1,0 +1,10 @@
+export const RECEIVE_BINS = 'RECEIVE_BINS';
+export const REQUEST_BINS = 'REQUEST_BINS';
+export const SELECT_BIN = 'SELECT_BIN';
+export const ADD_BIN = 'ADD_BIN';
+export const EDIT_BIN = 'EDIT_BIN';
+export const FILL_BIN = 'FILL_BIN';
+/*export const CHECKOUT_REQUEST = 'CHECKOUT_REQUEST';
+export const CHECKOUT_SUCCESS = 'CHECKOUT_SUCCESS';
+export const CHECKOUT_FAILURE = 'CHECKOUT_FAILURE';
+export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS';*/
