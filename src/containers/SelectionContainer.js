@@ -7,7 +7,27 @@ import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
 
 class SelectionContainer extends Component {
-  state = { selection: '' };
+  constructor(props) {
+    super(props);
+
+    this.state = { selection: '' };
+    this.onKeyDown = this.onKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.onKeyDown);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown);
+  }
+
+  onKeyDown(e) {
+    if (e.ctrlKey && e.keyCode === 83) {
+      this.save();
+      e.preventDefault();
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
@@ -51,7 +71,7 @@ class SelectionContainer extends Component {
           value={selection}
           setOptions={{
             showLineNumbers: true,
-            tabSize: 2,
+            tabSize: 2
           }}/>
       </main>
     )

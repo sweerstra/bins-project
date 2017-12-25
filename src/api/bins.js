@@ -1,9 +1,8 @@
+import storage from './storage';
+import { BINS_KEY } from '../constants/Keys';
+
 const getBins = () => {
-  const bins = [{ id: 1, name: 'Some fiddle', selection: 'arr.forEach(x => console.log(x));' }, {
-    id: 2,
-    name: 'How to lambda',
-    selection: 'const arr = [...arr1, newValue];'
-  }];
+  const bins = storage.get(BINS_KEY) || [];
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(bins);
@@ -11,4 +10,8 @@ const getBins = () => {
   });
 };
 
-export default { getBins };
+const saveBins = (bins) => {
+  storage.set(BINS_KEY, bins);
+};
+
+export default { getBins, saveBins };

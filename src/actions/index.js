@@ -1,4 +1,4 @@
-import storage from '../api/bins';
+import api from '../api/bins';
 import * as types from '../constants/ActionTypes'
 
 export const requestBins = () => ({
@@ -12,7 +12,7 @@ const receiveBins = bins => ({
 
 export const fetchBins = () => (dispatch) => {
   dispatch(requestBins());
-  storage.getBins().then((bins) => {
+  api.getBins().then((bins) => {
     dispatch(receiveBins(bins));
   });
 };
@@ -28,21 +28,24 @@ export const addBin = (name, selection = '') => ({
   selection
 });
 
-export const saveBin = (id, selection) => ({
-  type: types.SAVE_BIN,
-  id,
-  selection
-});
+const saveAll = (state) => {
+  const bins = state.bins.bins || [];
+  api.saveBins(bins);
+};
 
+export const saveBin = (id, selection) => (dispatch, getState) => {
+  dispatch({ type: types.SAVE_BIN, id, selection });
+  saveAll(getState());
+};
 
 export const addAndSelectBin = (name, selection) => (dispatch, getState) => {
   dispatch(addBin(name, selection));
   const { bins: { bins } } = getState();
   dispatch(selectBin(bins[bins.length - 1]));
+  saveAll(getState());
 };
 
-export const editBin = (id, name) => ({
-  type: types.EDIT_BIN,
-  id,
-  name
-});
+export const editBin = (id, name) => (dispatch, getState) => {
+  dispatch({ type: types.EDIT_BIN, id, name });
+  saveAll(getState());
+};
