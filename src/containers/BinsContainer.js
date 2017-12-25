@@ -12,22 +12,22 @@ class BinsContainer extends Component {
 
   render() {
     const search = this.state.search.toLowerCase();
-    const { bins, fetching, dispatch } = this.props;
+    const { bins, fetching, selectedBin, dispatch } = this.props;
 
     const filteredBins = search
       ? bins.filter(bin => bin.name.toLowerCase().includes(search))
       : bins;
 
     return (
-      <aside className="App-sidebar">
-        <div className="categories-search">
+      <aside className="sidebar">
+        <div className="bins-search">
           <input type="text" onChange={this.handleSearchChange.bind(this)} placeholder="Search bin..."/>
         </div>
-        <div className="categories">
+        <div className="bins">
           {fetching && <div style={{ padding: '8px' }}>Loading...</div>}
           {filteredBins.map((bin, index) =>
-            <div className="category"
-                 onClick={() => dispatch(selectBin(bin.id))}
+            <div className={bin.id === selectedBin.id ? 'bin active' : 'bin'}
+                 onClick={() => dispatch(selectBin(bin))}
                  key={index}>{bin.name}</div>
           )}
         </div>
@@ -40,8 +40,8 @@ class BinsContainer extends Component {
   }
 }
 
-const mapStateToProps = ({ bins }) => {
-  return bins;
+const mapStateToProps = ({ bins, selectedBin }) => {
+  return { ...bins, selectedBin };
 };
 
 export default connect(mapStateToProps)(BinsContainer);

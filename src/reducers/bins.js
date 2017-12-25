@@ -1,5 +1,16 @@
 import { combineReducers } from 'redux';
-import { ADD_BIN, EDIT_BIN, FILL_BIN, RECEIVE_BINS, REQUEST_BINS, SELECT_BIN } from '../constants/ActionTypes';
+import { ADD_BIN, EDIT_BIN, RECEIVE_BINS, REQUEST_BINS, SAVE_BIN, SELECT_BIN } from '../constants/ActionTypes';
+
+const updateBinProperty = (state, action, prop) => {
+  return {
+    ...state,
+    bins: state.bins.map(bin =>
+      bin.id === action.id
+        ? { ...bin, [prop]: action[prop] }
+        : bin
+    )
+  };
+};
 
 const bins = (state = { fetching: false, bins: [] }, action) => {
   switch (action.type) {
@@ -18,34 +29,21 @@ const bins = (state = { fetching: false, bins: [] }, action) => {
       const id = Math.max(...state.bins.map(bin => bin.id)) + 1;
       return {
         ...state,
-        bins: [...state.bins, { id, name: action.name, selection: '' }]
+        bins: [...state.bins, { id, name: action.name, selection: action.selection }]
       };
     case EDIT_BIN:
-      return {
-        ...state,
-        bins: state.bins.map(bin =>
-          bin.id === action.id ?
-            { ...bin, name: action.name } :
-            bin
-        )
-      };
+      return updateBinProperty(state, action, 'name');
+    case SAVE_BIN:
+      return updateBinProperty(state, action, 'selection');
     default:
       return state;
   }
 };
 
-const selectedBin = (state = { id: 0, selection: '' }, action) => {
+const selectedBin = (state = { id: 0, name: '', selection: '' }, action) => {
   switch (action.type) {
     case SELECT_BIN:
-      return {
-        ...state,
-        id: action.id
-      };
-    case FILL_BIN:
-      return {
-        ...state,
-        selection: action.selection
-      };
+      return action.bin;
     default:
       return state;
   }

@@ -1,17 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addBin } from '../actions';
+import { addAndSelectBin } from '../actions';
 
 const NavigationBar = ({ dispatch }) => (
   <header className="App-header">
     <h1 className="App-title">Bins Project</h1>
-    <div className="add" onClick={() => {
+    <div className="clickable" onClick={() => {
       const bin = prompt('Choose bin name');
 
       if (bin) {
-        dispatch(addBin(bin));
+        dispatch(addAndSelectBin(bin));
       }
-    }}>+
+    }}>
+      Create New Bin
     </div>
   </header>
 );

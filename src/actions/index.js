@@ -17,24 +17,32 @@ export const fetchBins = () => (dispatch) => {
   });
 };
 
-export const selectBin = id => ({
+export const selectBin = bin => ({
   type: types.SELECT_BIN,
-  id
+  bin
 });
 
-export const addBin = (name) => ({
+export const addBin = (name, selection = '') => ({
   type: types.ADD_BIN,
-  name
+  name,
+  selection
 });
+
+export const saveBin = (id, selection) => ({
+  type: types.SAVE_BIN,
+  id,
+  selection
+});
+
+
+export const addAndSelectBin = (name, selection) => (dispatch, getState) => {
+  dispatch(addBin(name, selection));
+  const { bins: { bins } } = getState();
+  dispatch(selectBin(bins[bins.length - 1]));
+};
 
 export const editBin = (id, name) => ({
   type: types.EDIT_BIN,
   id,
   name
-});
-
-export const fillBin = (id, selection) => ({
-  type: types.FILL_BIN,
-  id,
-  selection
 });

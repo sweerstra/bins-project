@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { addAndSelectBin, editBin, saveBin } from '../actions';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/javascript';
@@ -29,8 +30,14 @@ class SelectionContainer extends Component {
     return (
       <main className="App-content">
         <div className="selection-header">
-          <div>{selected}</div>
-          {selection && <div className="clickable" title="Ctrl+S">{'Save'}</div>}
+          <div
+            className={id ? 'clickable' : ''}
+            onClick={this.edit.bind(this)}>{selected}
+          </div>
+          <div className="clickable"
+               onClick={this.save.bind(this)}
+               title="Ctrl+S">Save
+          </div>
         </div>
         <AceEditor
           style={{ width: '100%', height: 'calc(100% - 40px)' }}
@@ -50,13 +57,36 @@ class SelectionContainer extends Component {
     )
   };
 
-  onChange(e) {
-    console.log(e);
+  edit() {
+    const { selectedBin, dispatch } = this.props;
+    console.log(selectedBin);
+    const bin = prompt(`Edit bin name (${selectedBin.name})`);
+    if (bin) {
+      dispatch(editBin(selectedBin.id, bin));
+    }
+  }
+
+  save() {
+    const { selection } = this.state;
+    const { selectedBin: { id }, dispatch } = this.props;
+    if (id === 0) {
+      console.log('zero');
+      const bin = prompt('Choose bin name');
+      if (bin) {
+        dispatch(addAndSelectBin(bin, selection));
+      }
+    } else {
+      dispatch(saveBin(id, selection));
+    }
+  }
+
+  onChange(selection) {
+    this.setState({ selection });
   }
 }
 
-const mapStateToProps = ({ bins: { fetching, bins }, selectedBin }) => {
-  return { fetching, bins, selectedBin };
+const mapStateToProps = ({ bins, selectedBin }) => {
+  return { ...bins, selectedBin };
 };
 
 export default connect(mapStateToProps)(SelectionContainer);
