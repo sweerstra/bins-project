@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -13,7 +13,7 @@ const store = createStore(
   applyMiddleware(thunk)
 );
 
-ReactDOM.render(
+render(
   <Provider store={store}>
     <App/>
   </Provider>,

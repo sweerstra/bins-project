@@ -28,9 +28,14 @@ export const addBin = (name, selection = '') => ({
   selection
 });
 
+export const removeBin = (id) => (dispatch, getState) => {
+  dispatch({ type: types.REMOVE_BIN, id });
+  saveAll(getState());
+};
+
 const saveAll = (state) => {
   const bins = state.bins.bins || [];
-  api.saveBins(bins);
+  api.setBins(bins);
 };
 
 export const saveBin = (id, selection) => (dispatch, getState) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchBins, selectBin } from '../actions'
+import { fetchBins, removeBin, selectBin } from '../actions'
 
 class BinsContainer extends Component {
   state = { search: '' };
@@ -21,14 +21,19 @@ class BinsContainer extends Component {
     return (
       <aside className="sidebar">
         <div className="bins-search">
-          <input type="text" onChange={this.handleSearchChange.bind(this)} placeholder="Search bin..."/>
+          <input type="text" onChange={this.handleSearchChange.bind(this)} placeholder="Search for bin..."/>
         </div>
         <div className="bins">
           {fetching && <div style={{ padding: '8px' }}>Loading...</div>}
           {filteredBins.map((bin, index) =>
             <div className={bin.id === selectedBin.id ? 'bin active' : 'bin'}
                  onClick={() => dispatch(selectBin(bin))}
-                 key={index}>{bin.name}</div>
+                 key={index}>
+              {bin.name}
+              <div className="remove-bin"
+                   onClick={(e) => this.remove(e, bin.id)}>&#x2716;
+              </div>
+            </div>
           )}
         </div>
       </aside>
@@ -37,6 +42,17 @@ class BinsContainer extends Component {
 
   handleSearchChange(event) {
     this.setState({ search: event.target.value });
+  }
+
+  remove(event, id) {
+    event.stopPropagation();
+
+    const { selectedBin, dispatch } = this.props;
+    dispatch(removeBin(id));
+
+    if (id === selectedBin.id) {
+      dispatch(selectBin({ id: 0, name: '', selection: '' }));
+    }
   }
 }
 

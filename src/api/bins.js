@@ -6,12 +6,12 @@ const getBins = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(bins);
-    }, 600);
+    }, 200);
   });
 };
 
-const saveBins = (bins) => {
+const setBins = (bins) => {
   storage.set(BINS_KEY, bins);
 };
 
-export default { getBins, saveBins };
+export default { getBins, setBins };

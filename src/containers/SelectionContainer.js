@@ -10,8 +10,8 @@ class SelectionContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { selection: '' };
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.state = { selection: '' };
   }
 
   componentDidMount() {
@@ -26,26 +26,23 @@ class SelectionContainer extends Component {
     if (e.ctrlKey && e.keyCode === 83) {
       this.save();
       e.preventDefault();
+    } else if (e.ctrlKey && e.keyCode === 13) {
+      this.run();
+      e.preventDefault();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
 
-    const { bins, selectedBin } = nextProps;
-    const { id } = selectedBin;
-    const selected = bins[id - 1];
-
-    if (selected) {
-      this.setState({ selection: selected.selection });
-    }
+    const { selectedBin: { selection } } = nextProps;
+    this.setState({ selection });
   }
 
   render() {
     const { selection } = this.state;
-    const { bins, selectedBin } = this.props;
-    const { id } = selectedBin;
-    const selected = id ? bins[id - 1].name : 'Empty bin';
+    const { selectedBin: { id, name } } = this.props;
+    const selected = id ? name : 'Empty bin';
 
     return (
       <main className="App-content">
@@ -54,9 +51,15 @@ class SelectionContainer extends Component {
             className={id ? 'clickable' : ''}
             onClick={this.edit.bind(this)}>{selected}
           </div>
-          <div className="clickable"
-               onClick={this.save.bind(this)}
-               title="Ctrl+S">Save
+          <div className="selection-buttons">
+            <div className="clickable"
+                 onClick={this.save.bind(this)}
+                 title="Ctrl+S">Save
+            </div>
+            <div className="clickable"
+                 onClick={this.run.bind(this)}
+                 title="Ctrl+Enter">Run Code
+            </div>
           </div>
         </div>
         <AceEditor
@@ -79,7 +82,6 @@ class SelectionContainer extends Component {
 
   edit() {
     const { selectedBin, dispatch } = this.props;
-    console.log(selectedBin);
     const bin = prompt(`Edit bin name (${selectedBin.name})`);
     if (bin) {
       dispatch(editBin(selectedBin.id, bin));
@@ -89,8 +91,8 @@ class SelectionContainer extends Component {
   save() {
     const { selection } = this.state;
     const { selectedBin: { id }, dispatch } = this.props;
+
     if (id === 0) {
-      console.log('zero');
       const bin = prompt('Choose bin name');
       if (bin) {
         dispatch(addAndSelectBin(bin, selection));
@@ -98,6 +100,15 @@ class SelectionContainer extends Component {
     } else {
       dispatch(saveBin(id, selection));
     }
+  }
+
+  run() {
+    const { selection } = this.state;
+    if (!selection) return;
+
+    eval(`(function() {
+      ${selection}
+    })()`);
   }
 
   onChange(selection) {
