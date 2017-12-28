@@ -7,7 +7,7 @@ import './App.css';
 const App = () => (
   <div className="App">
     <NavigationBar/>
-    <div className="content">
+    <div className="main-content">
       <BinsContainer/>
       <SelectionContainer/>
     </div>

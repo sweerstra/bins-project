@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchBins, removeBin, selectBin } from '../actions'
+import { fetchBins, removeBin, selectBin } from '../actions';
+import assets from '../assets';
 
 class BinsContainer extends Component {
   state = { search: '' };
@@ -21,7 +22,10 @@ class BinsContainer extends Component {
     return (
       <aside className="sidebar">
         <div className="bins-search">
-          <input type="text" onChange={this.handleSearchChange.bind(this)} placeholder="Search for bin..."/>
+          <input type="text"
+                 onChange={this.handleSearchChange.bind(this)}
+                 placeholder="Search for bin..."/>
+          <img src={assets.search} alt="Search"/>
         </div>
         <div className="bins">
           {fetching && <div style={{ padding: '8px' }}>Loading...</div>}
@@ -31,7 +35,8 @@ class BinsContainer extends Component {
                  key={index}>
               {bin.name}
               <div className="remove-bin"
-                   onClick={(e) => this.remove(e, bin.id)}>&#x2716;
+                   onClick={(e) => this.remove(e, bin.id)}>
+                <img src={assets.x} alt="Remove"/>
               </div>
             </div>
           )}
