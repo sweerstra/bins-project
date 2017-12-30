@@ -1,0 +1,53 @@
+.Bins-Container {
+  flex: 0 0 16em;
+  border-right: 3px solid #F65554;
+}
+
+.bins-search {
+  padding: 8px 16px;
+  background-color: #262A34;
+  border-bottom: 3px solid #F65554;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bins-search input {
+  color: #F65554;
+  background-color: #262A34;
+  font-size: 16px;
+  font-weight: bold;
+  width: 80%;
+  display: block;
+  border: none;
+  caret-color: #F65554;
+}
+
+.bins-search input:focus {
+  outline: none;
+}
+
+.bins-search ::-webkit-input-placeholder { color: white; }
+
+.bin {
+  height: 40px;
+  padding: 8px 16px;
+  color: #262A34;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bin:hover,
+.bin.active {
+  color: white;
+  background-color: #F65554;
+}
+
+.remove-bin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

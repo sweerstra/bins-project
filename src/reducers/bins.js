@@ -63,7 +63,7 @@ const bins = (state = { bins: [], fetching: false }, action) => {
 const selectedBin = (state = { id: 0, name: '', selection: '' }, action) => {
   switch (action.type) {
     case SELECT_BIN:
-      return action.bin;
+      return { ...action.bin };
     default:
       return state;
   }

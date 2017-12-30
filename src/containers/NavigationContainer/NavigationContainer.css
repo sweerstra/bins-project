@@ -1,0 +1,20 @@
+.Navigation-Container {
+  background-color: #262A34;
+  height: 50px;
+  padding: 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Navigation-Container-title { font-size: 1.5em; }
+
+.add-bin {
+  display: flex;
+  align-items: center;
+}
+
+.add-bin .clickable {
+  margin-left: 8px;
+}

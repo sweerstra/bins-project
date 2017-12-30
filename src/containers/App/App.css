@@ -4,146 +4,10 @@
   flex-direction: column;
 }
 
-.App-header {
-  background-color: #262A34;
-  height: 50px;
-  padding: 16px;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.App-title { font-size: 1.5em; }
-
 .main-content {
   display: flex;
   flex: 1;
 }
-
-/* ---- sidebar ---- */
-
-.sidebar {
-  flex: 0 0 15em;
-  border-right: 3px solid #F65554;
-}
-
-.bins-search {
-  background-color: #262A34;
-  padding: 8px 16px;
-  border-bottom: 3px solid #F65554;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.bins-search input {
-  color: #F65554;
-  background-color: #262A34;
-  font-size: 16px;
-  font-weight: bold;
-  width: 80%;
-  display: block;
-  border: none;
-  caret-color: #F65554;
-}
-
-.bins-search input:focus,
-.selection-code:focus {
-  outline: none;
-}
-
-.bins-search ::-webkit-input-placeholder { color: white; }
-
-.bin {
-  height: 40px;
-  padding: 8px 16px;
-  color: #262A34;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.bin:hover,
-.bin.active {
-  color: white;
-  background-color: #F65554;
-}
-
-.remove-bin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-main {
-  display: flex;
-  flex: 1;
-  padding: 0;
-}
-
-/* ---- selection ---- */
-
-.selection {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-}
-
-.selection-header {
-  padding: 8px 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #262A34;
-  border-bottom: 3px solid #F65554;
-  border-right: 3px solid #F65554;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.selection-header-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 80px;
-}
-
-.selection-editor {
-  height: calc(100% - 43px); /* 43px = padding-top: 8px + height: 24px + padding-bottom: 8px + border: 3px */
-  border-right: 3px solid #F65554;
-}
-
-/* ---- console ---- */
-
-.console {
-  flex: 0 0 16em;
-  background-color: #efefef;
-}
-
-.console-header {
-  padding: 8px 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #262A34;
-  border-bottom: 3px solid #F65554;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.console-log {
-  padding: 16px;
-  font-size: 16px;
-  font-family: monospace;
-}
-
-.log { color: #262A34; }
-
-.log.error { color: #F65554; }
 
 .clickable {
   cursor: pointer;
@@ -154,3 +18,18 @@ main {
   color: #F65554;
 }
 
+.textbox {
+  padding: 4px 8px;
+  color: #F65554;
+  background-color: #262A34;
+  border: 3px solid white;
+  font-size: 16px;
+}
+
+.textbox:focus {
+  outline: none;
+}
+
+.invisible {
+  visibility: hidden;
+}

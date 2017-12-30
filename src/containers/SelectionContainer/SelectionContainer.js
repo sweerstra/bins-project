@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addAndSelectBin, editBin, saveBin } from '../actions';
+import { addAndSelectBin, editBin, saveBin, selectBin } from '../../actions/index';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
-import assets from '../assets';
+import assets from '../../assets/index';
+import './SelectionContainer.css';
 
 class SelectionContainer extends Component {
   constructor(props) {
     super(props);
 
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.state = { selection: '', logs: [] };
+    this.state = { selection: '', editing: false, logs: [] };
   }
 
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown);
 
-    const consoleLog = console.log;
-    console.log = (message) => {
-      this.addLog(`>> ${message}`, 'code');
-      consoleLog(message);
+    this.consoleLog = console.log;
+    console.log = (...messages) => {
+      this.addLog(`>> ${messages.join(' ')}`, 'code');
+      this.consoleLog(...messages);
     };
   }
 
@@ -28,9 +29,17 @@ class SelectionContainer extends Component {
     window.removeEventListener('keydown', this.onKeyDown);
   }
 
+  componentDidUpdate() {
+    if (this.editingInput) {
+      this.editingInput.focus();
+      const { selectedBin } = this.props;
+      this.editingInput.value = selectedBin.name;
+    }
+  }
+
   onKeyDown(e) {
     if (e.ctrlKey && e.keyCode === 83) {
-      this.save();
+      this.saveBin();
       e.preventDefault();
     } else if (e.ctrlKey && e.keyCode === 13) {
       this.runCode();
@@ -46,24 +55,42 @@ class SelectionContainer extends Component {
   }
 
   render() {
-    const { selection, logs } = this.state;
+    const { selection, editing, logs } = this.state;
     const { selectedBin: { id, name } } = this.props;
     const selected = id ? name : 'Empty bin';
 
+    const binNameEditor = editing
+      ? <div className="add-bin">
+        <input
+          className="textbox"
+          type="text"
+          placeholder="Type bin name here..."
+          spellCheck="false"
+          onKeyDown={(e) => this.onBinNameKeyDown(e)}
+          ref={(textbox) => {
+            this.editingInput = textbox;
+          }}/>
+        <img className="clickable"
+             src={assets.save}
+             onClick={this.saveBinNameClick.bind(this)}
+             alt="Save Bin"/>
+      </div>
+      : <div
+        className={id ? 'clickable' : ''}
+        onClick={this.edit.bind(this)}>{selected}
+      </div>;
+
     return (
-      <main>
+      <main className="Selection-Container">
         <div className="selection">
           <div className="selection-header">
-            <div
-              className={id ? 'clickable' : ''}
-              onClick={this.edit.bind(this)}>{selected}
-            </div>
+            {binNameEditor}
             <div className="selection-header-buttons">
-              <img className="clickable"
-                   src={assets.save}
-                   onClick={this.save.bind(this)}
-                   title="Save (Ctrl+S)"
-                   alt="Save"/>
+              {!editing && <img className="clickable"
+                                src={assets.save}
+                                onClick={this.saveBin.bind(this)}
+                                title="Save (Ctrl+S)"
+                                alt="Save"/>}
               <img className="clickable"
                    src={assets.play}
                    onClick={this.runCode.bind(this)}
@@ -83,9 +110,6 @@ class SelectionContainer extends Component {
               highlightActiveLine={true}
               value={selection}
               setOptions={{
-                enableBasicAutocompletion: false,
-                enableLiveAutocompletion: false,
-                enableSnippets: false,
                 showLineNumbers: true,
                 tabSize: 2,
               }}/>
@@ -94,6 +118,10 @@ class SelectionContainer extends Component {
         <div className="console">
           <div className="console-header">
             Console Log
+            <img src={assets.trash}
+                 className="clickable"
+                 onClick={this.clearConsole.bind(this)}
+                 alt="Clear Console Log"/>
             <img src={assets.info}
                  title="Use the console.log function in your code to access this log"
                  alt="Console Log Info"/>
@@ -112,26 +140,38 @@ class SelectionContainer extends Component {
     );
   };
 
-  edit() {
-    const { selectedBin, dispatch } = this.props;
-    const bin = prompt(`Edit bin name (${selectedBin.name})`);
-    if (bin) {
-      dispatch(editBin(selectedBin.id, bin));
+  saveBinNameClick() {
+    const { selectedBin: { id } } = this.props;
+
+    if (this.editingInput) {
+      const { value } = this.editingInput;
+      if (id === 0) {
+        this.saveEmptyBin(value);
+      } else {
+        this.editBinName(id, value);
+      }
+    }
+
+    this.setState({ editing: false });
+  }
+
+  onBinNameKeyDown(event) {
+    if (event.keyCode === 13) {
+      this.saveBinNameClick();
     }
   }
 
-  save() {
+  saveEmptyBin(name) {
     const { selection } = this.state;
-    const { selectedBin: { id }, dispatch } = this.props;
+    const { dispatch } = this.props;
 
-    if (id === 0) {
-      const bin = prompt('Choose name for this bin');
-      if (bin) {
-        dispatch(addAndSelectBin(bin, selection));
-      }
-    } else {
-      dispatch(saveBin(id, selection));
-    }
+    dispatch(addAndSelectBin(name, selection));
+  }
+
+  editBinName(id, name) {
+    const { dispatch } = this.props;
+    dispatch(editBin(id, name));
+    dispatch(selectBin({ id, name }));
   }
 
   runCode() {
@@ -147,8 +187,27 @@ class SelectionContainer extends Component {
     this.addLog(null, 'break');
   }
 
+  clearConsole() {
+    this.setState(state => ({ ...state, logs: [] }));
+  }
+
   onChange(selection) {
     this.setState({ selection });
+  }
+
+  edit() {
+    this.setState(state => ({ ...state, editing: true }));
+  }
+
+  saveBin() {
+    const { selection } = this.state;
+    const { selectedBin: { id }, dispatch } = this.props;
+
+    if (id === 0) {
+      this.edit();
+    } else {
+      dispatch(saveBin(id, selection));
+    }
   }
 
   addLog(message, type) {

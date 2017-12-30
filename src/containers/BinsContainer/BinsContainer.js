@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchBins, removeBin, selectBin } from '../actions';
-import assets from '../assets';
+import { fetchBins, removeBin, selectBin } from '../../actions/index';
+import assets from '../../assets/index';
+import './BinsContainer.css';
 
 class BinsContainer extends Component {
   state = { search: '' };
@@ -20,7 +21,7 @@ class BinsContainer extends Component {
       : bins;
 
     return (
-      <aside className="sidebar">
+      <aside className="Bins-Container">
         <div className="bins-search">
           <input type="text"
                  onChange={this.handleSearchChange.bind(this)}
