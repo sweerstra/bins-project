@@ -1,5 +1,5 @@
 .Navigation-Container {
-  background-color: #262A34;
+  background-color: var(--main-dark);
   height: 50px;
   padding: 16px;
   color: white;

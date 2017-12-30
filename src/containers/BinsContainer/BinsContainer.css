@@ -1,26 +1,26 @@
 .Bins-Container {
   flex: 0 0 16em;
-  border-right: 3px solid #F65554;
+  border-right: 3px solid var(--main-red);
 }
 
 .bins-search {
   padding: 10px 16px;
-  background-color: #262A34;
-  border-bottom: 3px solid #F65554;
+  background-color: var(--main-dark);
+  border-bottom: 3px solid var(--main-red);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .bins-search input {
-  color: #F65554;
-  background-color: #262A34;
+  color: var(--main-red);
+  background-color: var(--main-dark);
   font-size: 16px;
   font-weight: bold;
   width: 80%;
   display: block;
   border: none;
-  caret-color: #F65554;
+  caret-color: var(--main-red);
 }
 
 .bins-search input:focus {
@@ -32,7 +32,7 @@
 .bin {
   height: 40px;
   padding: 8px 16px;
-  color: #262A34;
+  color: var(--main-dark);
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -43,7 +43,7 @@
 .bin:hover,
 .bin.active {
   color: white;
-  background-color: #F65554;
+  background-color: var(--main-red);
 }
 
 .remove-bin {

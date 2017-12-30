@@ -14,22 +14,18 @@
   font-weight: bold;
 }
 
-.clickable:hover {
-  color: #F65554;
-}
+.clickable:hover { color: var(--main-red); }
+
+.clickable:hover .feather { stroke: var(--main-red); }
 
 .textbox {
   padding: 4px 8px;
-  color: #F65554;
-  background-color: #262A34;
+  color: var(--main-red);
+  background-color: var(--main-dark);
   border: 3px solid white;
   font-size: 16px;
 }
 
-.textbox:focus {
-  outline: none;
-}
+.textbox:focus { outline: none; }
 
-.invisible {
-  visibility: hidden;
-}
+.invisible { visibility: hidden; }
