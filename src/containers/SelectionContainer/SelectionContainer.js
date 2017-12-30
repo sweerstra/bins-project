@@ -8,8 +8,8 @@ import assets from '../../assets/index';
 import './SelectionContainer.css';
 
 class SelectionContainer extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.state = { selection: '', editing: false, logs: [] };
@@ -76,8 +76,15 @@ class SelectionContainer extends Component {
              alt="Save Bin"/>
       </div>
       : <div
-        className={id ? 'clickable' : ''}
-        onClick={this.edit.bind(this)}>{selected}
+        className={`edit-bin-name ${id ? 'clickable' : ''}`}
+        onClick={this.edit.bind(this)}>
+        <span>{selected}</span>
+        {Boolean(id) &&
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
+             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit">
+          <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+          <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+        </svg>}
       </div>;
 
     return (
@@ -86,16 +93,16 @@ class SelectionContainer extends Component {
           <div className="selection-header">
             {binNameEditor}
             <div className="selection-header-buttons">
-              {!editing && <img className="clickable"
-                                src={assets.save}
-                                onClick={this.saveBin.bind(this)}
-                                title="Save (Ctrl+S)"
-                                alt="Save"/>}
               <img className="clickable"
                    src={assets.play}
                    onClick={this.runCode.bind(this)}
                    title="Run Code (Ctrl+Enter)"
                    alt="Run Code"/>
+              {!editing && <img className="clickable"
+                                src={assets.save}
+                                onClick={this.saveBin.bind(this)}
+                                title="Save (Ctrl+S)"
+                                alt="Save"/>}
             </div>
           </div>
           <div className="selection-editor">
@@ -104,7 +111,7 @@ class SelectionContainer extends Component {
               mode="javascript"
               theme="tomorrow"
               onChange={this.onChange.bind(this)}
-              fontSize={14}
+              fontSize={16}
               showPrintMargin={true}
               showGutter={true}
               highlightActiveLine={true}

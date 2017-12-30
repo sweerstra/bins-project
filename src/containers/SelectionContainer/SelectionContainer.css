@@ -12,6 +12,7 @@
 }
 
 .selection-header {
+  height: 30px;
   padding: 8px 16px;
   font-weight: bold;
   color: white;
@@ -23,6 +24,15 @@
   justify-content: space-between;
 }
 
+.edit-bin-name {
+  display: flex;
+  align-items: center;
+}
+
+.edit-bin-name span { margin-right: 10px; }
+
+.edit-bin-name.clickable:hover .feather { stroke: #F65554; }
+
 .selection-header-buttons {
   display: flex;
   align-items: center;
@@ -31,7 +41,7 @@
 }
 
 .selection-editor {
-  height: calc(100% - 43px); /* 43px = padding-top: 8px + height: 24px + padding-bottom: 8px + border: 3px */
+  height: 100%; /*calc(100% - 43px);*/ /* 43px = padding-top: 8px + height: 24px + padding-bottom: 8px + border: 3px */
   border-right: 3px solid #F65554;
 }
 
@@ -43,7 +53,7 @@
 }
 
 .console-header {
-  padding: 8px 16px;
+  padding: 10px 16px;
   font-weight: bold;
   color: white;
   background-color: #262A34;
