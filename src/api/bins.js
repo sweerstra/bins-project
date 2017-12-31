@@ -1,17 +1,12 @@
-import storage from './storage';
-import { BINS_KEY } from '../constants/Keys';
+import Request from '../api/Request';
+import { BINS_API } from '../constants/Keys';
 
 const getBins = () => {
-  const bins = storage.get(BINS_KEY) || [];
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(bins);
-    }, 200);
-  });
+  return Request.get(BINS_API);
 };
 
 const setBins = (bins) => {
-  storage.set(BINS_KEY, bins);
+  return Request.put(BINS_API, bins);
 };
 
 export default { getBins, setBins };
