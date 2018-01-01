@@ -54,3 +54,29 @@ export const editBin = (id, name) => (dispatch, getState) => {
   dispatch({ type: types.EDIT_BIN, id, name });
   saveAll(getState());
 };
+
+export const addLog = (message, logType) => ({
+  type: types.ADD_LOG,
+  message,
+  logType
+});
+
+export const clearConsole = () => ({
+  type: types.CLEAR_CONSOLE
+});
+
+export const addLibrary = (name, url) => ({
+  type: types.ADD_LIBRARY,
+  name,
+  url
+});
+
+export const removeLibrary = (index) => ({
+  type: types.REMOVE_LIBRARY,
+  index
+});
+
+export const toggleLibraries = (toggle) => ({
+  type: types.TOGGLE_LIBRARIES,
+  toggle
+});

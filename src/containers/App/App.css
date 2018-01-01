@@ -9,6 +9,8 @@
   flex: 1;
 }
 
+::-webkit-input-placeholder { color: white; }
+
 .clickable {
   cursor: pointer;
   font-weight: bold;

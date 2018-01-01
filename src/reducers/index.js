@@ -1,12 +1,17 @@
 import { combineReducers } from 'redux';
 import {
   ADD_BIN,
+  ADD_LIBRARY,
+  ADD_LOG,
+  CLEAR_CONSOLE,
   EDIT_BIN,
   RECEIVE_BINS,
   REMOVE_BIN,
+  REMOVE_LIBRARY,
   REQUEST_BINS,
   SAVE_BIN,
-  SELECT_BIN
+  SELECT_BIN,
+  TOGGLE_LIBRARIES
 } from '../constants/ActionTypes';
 
 const updateBinProperty = (state, action, prop) => {
@@ -69,4 +74,46 @@ const selectedBin = (state = { id: 0, name: '', selection: '' }, action) => {
   }
 };
 
-export default combineReducers({ bins, selectedBin });
+const logs = (state = [], action) => {
+  switch (action.type) {
+    case ADD_LOG:
+      return [
+        ...state,
+        { message: action.message, logType: action.logType }
+      ];
+    case CLEAR_CONSOLE:
+      return [];
+    default:
+      return state;
+  }
+};
+
+const libraries = (state = { libraries: [], toggle: false }, action) => {
+  switch (action.type) {
+    case ADD_LIBRARY:
+      return {
+        ...state,
+        libraries: [
+          ...state.libraries,
+          { name: action.name, url: action.url }
+        ]
+      };
+    case REMOVE_LIBRARY:
+      return {
+        ...state,
+        libraries: [
+          ...state.libraries.slice(0, action.index),
+          ...state.libraries.slice(action.index + 1)
+        ]
+      };
+    case TOGGLE_LIBRARIES:
+      return {
+        ...state,
+        toggle: action.toggle
+      };
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({ bins, selectedBin, logs, libraries });

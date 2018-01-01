@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addAndSelectBin, editBin, saveBin, selectBin } from '../../actions/index';
+import { addAndSelectBin, addLog, editBin, saveBin, selectBin } from '../../actions/index';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
 import assets from '../../assets/index';
 import './SelectionContainer.css';
+import ConsoleLog from '../ConsoleLog';
+import LibrariesContainer from '../LibrariesContainer/LibrariesContainer';
 
 class SelectionContainer extends Component {
   constructor() {
     super();
 
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.state = { selection: '', editing: false, logs: [] };
+    this.state = { selection: '', editing: false };
   }
 
   componentDidMount() {
@@ -20,7 +23,7 @@ class SelectionContainer extends Component {
 
     this.consoleLog = console.log;
     console.log = (...messages) => {
-      this.addLog(`>> ${messages.join(' ')}`, 'code');
+      this.props.onAddLog(`>> ${messages.join(' ')}`, 'code');
       this.consoleLog(...messages);
     };
   }
@@ -55,8 +58,8 @@ class SelectionContainer extends Component {
   }
 
   render() {
-    const { selection, editing, logs } = this.state;
-    const { selectedBin: { id, name } } = this.props;
+    const { selection, editing } = this.state;
+    const { selectedBin: { id, name }, onShowLibraries, librariesToggle } = this.props;
     const selected = id ? name : 'Empty bin';
 
     const binNameEditor = editing
@@ -118,31 +121,12 @@ class SelectionContainer extends Component {
               value={selection}
               setOptions={{
                 showLineNumbers: true,
-                tabSize: 2,
+                tabSize: 2
               }}/>
           </div>
         </div>
-        <div className="console">
-          <div className="console-header">
-            Console Log
-            <img src={assets.trash}
-                 className="clickable"
-                 onClick={this.clearConsole.bind(this)}
-                 alt="Clear Console Log"/>
-            <img src={assets.info}
-                 title="Use the console.log function in your code to access this log"
-                 alt="Console Log Info"/>
-          </div>
-          <div className="console-log">
-            {logs.map(({ message, type }, index) =>
-              type === 'break'
-                ? <br key={index}/>
-                : <div className={type === 'error' ? 'error log' : 'log'} key={index}>
-                  {message}
-                </div>
-            )}
-          </div>
-        </div>
+        <ConsoleLog/>
+        <LibrariesContainer/>
       </main>
     );
   };
@@ -169,33 +153,27 @@ class SelectionContainer extends Component {
   }
 
   saveEmptyBin(name) {
-    const { selection } = this.state;
-    const { dispatch } = this.props;
-
-    dispatch(addAndSelectBin(name, selection));
+    this.props.onAddAndSelectBin(name, this.state.selection);
   }
 
   editBinName(id, name) {
-    const { dispatch } = this.props;
-    dispatch(editBin(id, name));
-    dispatch(selectBin({ id, name }));
+    const { onEditBin, onSelectBin } = this.props;
+    onEditBin(id, name);
+    onSelectBin({ id, name });
   }
 
   runCode() {
     const { selection } = this.state;
     if (!selection) return;
+    const { onAddLog } = this.props;
 
     try {
       eval(`(function() { ${selection} })()`);
     } catch (e) {
       console.error(e.message);
-      this.addLog(e.message, 'error');
+      onAddLog(e.message, 'error');
     }
-    this.addLog(null, 'break');
-  }
-
-  clearConsole() {
-    this.setState(state => ({ ...state, logs: [] }));
+    onAddLog(null, 'break');
   }
 
   onChange(selection) {
@@ -208,28 +186,36 @@ class SelectionContainer extends Component {
 
   saveBin() {
     const { selection } = this.state;
-    const { selectedBin: { id }, dispatch } = this.props;
+    const { selectedBin: { id }, onSaveBin } = this.props;
 
     if (id === 0) {
       this.edit();
     } else {
-      dispatch(saveBin(id, selection));
+      onSaveBin(id, selection);
     }
-  }
-
-  addLog(message, type) {
-    this.setState(state => ({
-      ...state,
-      logs: [
-        ...state.logs,
-        { message, type }
-      ]
-    }));
   }
 }
 
-const mapStateToProps = ({ bins, selectedBin }) => {
-  return { ...bins, selectedBin };
+SelectionContainer.propTypes = {
+  bins: PropTypes.array,
+  fetching: PropTypes.bool,
+  selectedBin: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    selection: PropTypes.string
+  })
 };
 
-export default connect(mapStateToProps)(SelectionContainer);
+const mapStateToProps = ({ bins, selectedBin }) => {
+  return ({ ...bins, selectedBin });
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onSelectBin: (bin) => dispatch(selectBin(bin)),
+  onEditBin: (id, name) => dispatch(editBin(id, name)),
+  onAddAndSelectBin: (name, selection) => dispatch(addAndSelectBin(name, selection)),
+  onSaveBin: (id, selection) => dispatch(saveBin(id, selection)),
+  onAddLog: (message, logType) => dispatch(addLog(message, logType))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelectionContainer);

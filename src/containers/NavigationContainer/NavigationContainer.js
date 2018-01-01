@@ -38,7 +38,7 @@ class NavigationBar extends Component {
               this.editingInput = textbox;
             }}/>
           <img className="clickable"
-               src={assets.plusCircle}
+               src={assets.plusCircleSmall}
                onClick={this.addBinClick.bind(this)}
                alt="Add Bin"/>
         </div>}

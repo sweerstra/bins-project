@@ -1,0 +1,68 @@
+.Libraries-Container,
+.libraries-placeholder {
+  width: 225px;
+  height: 20em;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--main-dark);
+}
+
+.Libraries-Container {
+  width: 256px;
+}
+
+.libraries-placeholder {
+  height: 20px;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  border-top: 3px solid var(--main-red);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.libraries-header {
+  padding: 8px 16px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  border-top: 3px solid var(--main-red);
+  border-bottom: 3px solid var(--main-red);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.libraries { padding: 0 16px }
+
+.library {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.library a {
+  color: white;
+  font-weight: bold;
+}
+
+.add-library {
+  height: 60px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-library input {
+  background-color: var(--main-dark);
+  border: 3px solid white;
+  color: white;
+  width: 70%;
+}
+
+.add-library ::-webkit-input-placeholder { color: #c3c3c3; }
