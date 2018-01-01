@@ -61,7 +61,7 @@ class LibrariesContainer extends Component {
               <a href={url} target="about_blank">{name}</a>
               <img src={assets.x}
                    className="clickable"
-                   onClick={() => onRemoveLibrary(index)}
+                   onClick={() => onRemoveLibrary(url, index)}
                    alt="Remove Library"/>
             </div>
           )}
@@ -77,6 +77,14 @@ const appendScript = (src) => {
   document.head.appendChild(script);
 };
 
+const removeScript = (src) => {
+  Array.from(document.querySelectorAll('script')).forEach((script) => {
+    if (script.src === src) {
+      script.parentNode.removeChild(script);
+    }
+  });
+};
+
 const mapStateToProps = ({ libraries }) => ({ ...libraries });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -87,9 +95,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(addLibrary(name, url));
     appendScript(url);
   },
-  onRemoveLibrary: (index) => dispatch(removeLibrary(index)),
+  onRemoveLibrary(url, index) {
+    dispatch(removeLibrary(index));
+    removeScript(url);
+  },
   onShowLibraries: () => dispatch(toggleLibraries(true)),
-  onHideLibraries: (toggle) => dispatch(toggleLibraries(false))
+  onHideLibraries: () => dispatch(toggleLibraries(false))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LibrariesContainer);

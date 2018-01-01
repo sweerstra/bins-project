@@ -36,7 +36,7 @@
   justify-content: space-between;
 }
 
-.libraries { padding: 0 16px }
+.libraries { padding: 8px 16px }
 
 .library {
   margin-bottom: 8px;
@@ -46,13 +46,13 @@
 }
 
 .library a {
-  color: white;
+  color: var(--main-red);
   font-weight: bold;
 }
 
 .add-library {
-  height: 60px;
   padding: 8px 16px;
+  border-bottom: 3px solid var(--main-red);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,9 +60,10 @@
 
 .add-library input {
   background-color: var(--main-dark);
-  border: 3px solid white;
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
   color: white;
-  width: 70%;
 }
 
-.add-library ::-webkit-input-placeholder { color: #c3c3c3; }
+

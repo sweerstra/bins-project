@@ -59,7 +59,7 @@ class SelectionContainer extends Component {
 
   render() {
     const { selection, editing } = this.state;
-    const { selectedBin: { id, name }, onShowLibraries, librariesToggle } = this.props;
+    const { selectedBin: { id, name } } = this.props;
     const selected = id ? name : 'Empty bin';
 
     const binNameEditor = editing
