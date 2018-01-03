@@ -30,4 +30,15 @@
 
 .textbox:focus { outline: none; }
 
+.feather:hover {
+  stroke: var(--main-red);
+  cursor: pointer;
+}
+
 .invisible { visibility: hidden; }
+
+.flex { display: flex; }
+
+.center-items { align-items: center; }
+
+.center-content { justify-content: center; }

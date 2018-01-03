@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 import {
   ADD_BIN,
-  ADD_LIBRARY,
+  ADD_LIBRARY_IF_NEW,
   ADD_LOG,
   CLEAR_CONSOLE,
   EDIT_BIN,
   RECEIVE_BINS,
+  RECEIVE_DEFAULT_LIBRARIES,
   REMOVE_BIN,
-  REMOVE_LIBRARY,
   REQUEST_BINS,
   SAVE_BIN,
   SELECT_BIN,
@@ -88,28 +88,27 @@ const logs = (state = [], action) => {
   }
 };
 
-const libraries = (state = { libraries: [], toggle: false }, action) => {
+const libraries = (state = { defaultLibraries: [], librariesVisible: false }, action) => {
   switch (action.type) {
-    case ADD_LIBRARY:
-      return {
+    case RECEIVE_DEFAULT_LIBRARIES:
+      return { ...state, defaultLibraries: action.defaultLibraries };
+    case ADD_LIBRARY_IF_NEW:
+      const { defaultLibraries } = state;
+      const { name, url } = action.library;
+      const index = defaultLibraries.findIndex(library => library.name === name);
+
+      if (index === -1) return {
         ...state,
-        libraries: [
-          ...state.libraries,
-          { name: action.name, url: action.url }
+        defaultLibraries: [
+          ...state.defaultLibraries,
+          { name, url }
         ]
       };
-    case REMOVE_LIBRARY:
-      return {
-        ...state,
-        libraries: [
-          ...state.libraries.slice(0, action.index),
-          ...state.libraries.slice(action.index + 1)
-        ]
-      };
+      return state;
     case TOGGLE_LIBRARIES:
       return {
         ...state,
-        toggle: action.toggle
+        librariesVisible: action.librariesVisible
       };
     default:
       return state;

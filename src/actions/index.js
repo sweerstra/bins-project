@@ -1,4 +1,5 @@
-import api from '../api/bins';
+import BinsApi from '../api/bins';
+import LibrariesApi from '../api/libraries';
 import * as types from '../constants/ActionTypes'
 
 export const requestBins = () => ({
@@ -12,7 +13,7 @@ const receiveBins = bins => ({
 
 export const fetchBins = () => (dispatch) => {
   dispatch(requestBins());
-  api.getBins().then((bins) => {
+  BinsApi.getBins().then((bins) => {
     dispatch(receiveBins(bins));
   });
 };
@@ -35,7 +36,7 @@ export const removeBin = (id) => (dispatch, getState) => {
 
 const saveAll = (state) => {
   const bins = state.bins.bins || [];
-  api.setBins(bins);
+  BinsApi.setBins(bins);
 };
 
 export const saveBin = (id, selection) => (dispatch, getState) => {
@@ -65,18 +66,28 @@ export const clearConsole = () => ({
   type: types.CLEAR_CONSOLE
 });
 
-export const addLibrary = (name, url) => ({
-  type: types.ADD_LIBRARY,
-  name,
-  url
+const receiveDefaultLibraries = (defaultLibraries) => ({
+  type: types.RECEIVE_DEFAULT_LIBRARIES,
+  defaultLibraries
 });
 
-export const removeLibrary = (index) => ({
-  type: types.REMOVE_LIBRARY,
-  index
-});
+export const fetchDefaultLibraries = () => (dispatch) => {
+  LibrariesApi.getLibraries().then((libraries) => {
+    dispatch(receiveDefaultLibraries(libraries));
+  });
+};
 
-export const toggleLibraries = (toggle) => ({
+export const addDefaultLibraryIfNew = (library) => (dispatch, getState) => {
+  const initialLength = getState().libraries.defaultLibraries.length;
+  dispatch({ type: types.ADD_LIBRARY_IF_NEW, library });
+  const { defaultLibraries } = getState().libraries;
+
+  if (defaultLibraries.length > initialLength) {
+    LibrariesApi.setLibraries(defaultLibraries);
+  }
+};
+
+export const toggleLibraryMenu = (librariesVisible) => ({
   type: types.TOGGLE_LIBRARIES,
-  toggle
+  librariesVisible
 });

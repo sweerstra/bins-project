@@ -1,21 +1,12 @@
-.Libraries-Container,
-.libraries-placeholder {
-  width: 225px;
-  height: 20em;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: var(--main-dark);
-}
-
 .Libraries-Container {
   width: 256px;
+  height: 20em;
+  font-size: 18px;
 }
 
 .libraries-placeholder {
-  height: 20px;
-  padding: 16px;
-  font-size: 18px;
+  width: 225px;
+  padding: 8px 16px;
   font-weight: bold;
   color: white;
   border-top: 3px solid var(--main-red);
@@ -24,9 +15,16 @@
   justify-content: space-between;
 }
 
+.Libraries-Container,
+.libraries-placeholder {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--main-dark);
+}
+
 .libraries-header {
   padding: 8px 16px;
-  font-size: 18px;
   font-weight: bold;
   color: white;
   border-top: 3px solid var(--main-red);
@@ -52,18 +50,40 @@
 
 .add-library {
   padding: 8px 16px;
-  border-bottom: 3px solid var(--main-red);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .add-library input {
+  width: 160px;
+  margin-right: 8px;
+  padding: 4px 0;
+  color: var(--main-red);
   background-color: var(--main-dark);
   border: none;
-  padding-left: 0;
-  padding-right: 0;
-  color: white;
 }
 
+.add-library-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+}
 
+.add-library-icons .clickable:nth-child(2) { margin-left: 10px; }
+
+.autocomplete-suggestions {
+  width: 240px;
+  position: absolute;
+  left: 16px;
+  background-color: var(--main-dark);
+}
+
+.autocomplete-suggestions p {
+  margin: 8px 0;
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}

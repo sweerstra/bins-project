@@ -7,7 +7,7 @@ import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
 import assets from '../../assets/index';
 import './SelectionContainer.css';
-import ConsoleLog from '../ConsoleLog';
+import ConsoleLog from '../ConsoleLogContainer';
 import LibrariesContainer from '../LibrariesContainer/LibrariesContainer';
 
 class SelectionContainer extends Component {
@@ -197,8 +197,6 @@ class SelectionContainer extends Component {
 }
 
 SelectionContainer.propTypes = {
-  bins: PropTypes.array,
-  fetching: PropTypes.bool,
   selectedBin: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
