@@ -1,7 +1,7 @@
 import React from 'react';
-import NavigationBar from '../NavigationContainer/NavigationContainer';
-import BinsContainer from '../BinsContainer/BinsContainer';
-import SelectionContainer from '../SelectionContainer/SelectionContainer';
+import NavigationBar from '../Navigation/Navigation';
+import BinsContainer from '../Bins/Bins';
+import SelectionContainer from '../Selection/Selection';
 import './App.css';
 
 const App = () => (

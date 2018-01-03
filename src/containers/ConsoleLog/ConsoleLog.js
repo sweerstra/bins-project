@@ -1,17 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { clearConsole } from '../actions/index';
-import assets from '../assets/index';
+import { clearConsole } from '../../actions/index';
+import images from '../../assets/index';
 
 const ConsoleLog = ({ logs, onClearConsole }) => (
   <div className="console">
     <div className="console-header">
       Console Log
-      <img src={assets.trash}
+      <img src={images.trash}
            className="clickable"
            onClick={() => onClearConsole()}
            alt="Clear Console Log"/>
-      <img src={assets.info}
+      <img src={images.info}
            title="Use the console.log function in your code to access this log"
            alt="Console Log Info"/>
     </div>
@@ -26,6 +27,10 @@ const ConsoleLog = ({ logs, onClearConsole }) => (
     </div>
   </div>
 );
+
+ConsoleLog.propTypes = {
+  logs: PropTypes.array
+};
 
 const mapStateToProps = ({ logs }) => ({ logs });
 

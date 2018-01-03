@@ -5,15 +5,14 @@ import { addAndSelectBin, addLog, editBin, saveBin, selectBin } from '../../acti
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
-import assets from '../../assets/index';
-import './SelectionContainer.css';
-import ConsoleLog from '../ConsoleLogContainer';
-import LibrariesContainer from '../LibrariesContainer/LibrariesContainer';
+import images from '../../assets/index';
+import './Selection.css';
+import ConsoleLog from '../ConsoleLog/ConsoleLog';
+import LibrariesContainer from '../Libraries/Libraries';
 
 class SelectionContainer extends Component {
   constructor() {
     super();
-
     this.onKeyDown = this.onKeyDown.bind(this);
     this.state = { selection: '', editing: false };
   }
@@ -74,7 +73,7 @@ class SelectionContainer extends Component {
             this.editingInput = textbox;
           }}/>
         <img className="clickable"
-             src={assets.save}
+             src={images.save}
              onClick={this.saveBinNameClick.bind(this)}
              alt="Save Bin"/>
       </div>
@@ -97,12 +96,12 @@ class SelectionContainer extends Component {
             {binNameEditor}
             <div className="selection-header-buttons">
               <img className="clickable"
-                   src={assets.play}
+                   src={images.play}
                    onClick={this.runCode.bind(this)}
                    title="Run Code (Ctrl+Enter)"
                    alt="Run Code"/>
               {!editing && <img className="clickable"
-                                src={assets.save}
+                                src={images.save}
                                 onClick={this.saveBin.bind(this)}
                                 title="Save (Ctrl+S)"
                                 alt="Save"/>}

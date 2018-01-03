@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchBins, removeBin, selectBin } from '../../actions/index';
 import images from '../../assets/index';
-import './BinsContainer.css';
+import './Bins.css';
 
 class BinsContainer extends Component {
   constructor() {
     super();
-
     this.state = { search: '' };
   }
 

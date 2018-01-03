@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addDefaultLibraryIfNew, fetchDefaultLibraries, toggleLibraryMenu } from '../../actions/index';
-import './LibrariesContainer.css';
-import assets from '../../assets/index';
+import './Libraries.css';
+import images from '../../assets/index';
 
 class LibrariesContainer extends Component {
   constructor() {
     super();
-
     this.state = { libraries: [], filtered: [] };
   }
 
@@ -30,7 +29,7 @@ class LibrariesContainer extends Component {
       return (
         <div className="libraries-placeholder">
           Libraries
-          <img src={assets.plusCircleSmall}
+          <img src={images.plusCircleSmall}
                className="clickable"
                onClick={() => onShowLibraryMenu()}
                alt="Show Libraries"/>
@@ -42,7 +41,7 @@ class LibrariesContainer extends Component {
       <div className="Libraries-Container">
         <div className="libraries-header">
           Libraries
-          <img src={assets.minusCircle}
+          <img src={images.minusCircle}
                className="clickable"
                onClick={() => onHideLibraryMenu()}
                alt="Hide Libraries"/>
@@ -60,14 +59,14 @@ class LibrariesContainer extends Component {
                  }}
                  ref={input => this.input = input}/>
           {filtered.length === 0 && <div className="add-library-icons">
-            <img src={assets.plusCircleSmall}
+            <img src={images.plusCircleSmall}
                  className="clickable"
                  onClick={() => {
                    this.addSelectedLibrary(this.input.value);
                    this.input.value = '';
                  }}
                  alt="Add Library"/>
-            <img src={assets.list}
+            <img src={images.list}
                  className="clickable"
                  onClick={this.showDefaultLibraries.bind(this)}
                  alt="Show Default Libraries"/>
@@ -84,7 +83,7 @@ class LibrariesContainer extends Component {
           {libraries.map(({ name, url }, index) =>
             <div className="library" key={index}>
               <a href={url} target="about_blank">{name}</a>
-              <img src={assets.x}
+              <img src={images.x}
                    className="clickable"
                    onClick={() => this.removeSelectedLibrary(url, index)}
                    alt="Remove Library"/>
