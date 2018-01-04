@@ -15,6 +15,12 @@ class LibrariesContainer extends Component {
     this.props.onFetchDefaultLibraries();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.defaultLibraries.length > this.props.defaultLibraries.length) {
+      this.setState({ filtered: nextProps.defaultLibraries });
+    }
+  }
+
   componentDidUpdate() {
     if (this.input) {
       this.input.focus();
@@ -58,7 +64,7 @@ class LibrariesContainer extends Component {
                    }
                  }}
                  ref={input => this.input = input}/>
-          {filtered.length === 0 && <div className="add-library-icons">
+          {filtered.length === 0 && <div className="icon-buttons">
             <img src={images.plusCircleSmall}
                  className="clickable"
                  onClick={() => {
@@ -99,7 +105,7 @@ class LibrariesContainer extends Component {
   }
 
   selectDefaultLibrary(library) {
-    this.input.value = library.url;
+    this.addSelectedLibrary(library.url, true);
     this.setState({ filtered: [] });
   }
 
@@ -114,7 +120,7 @@ class LibrariesContainer extends Component {
     this.setState(({ filtered }));
   }
 
-  addSelectedLibrary(url) {
+  addSelectedLibrary(url, isDefaultLibrary = false) {
     const name = url.split('/').pop();
     const library = { name, url };
 
@@ -123,7 +129,9 @@ class LibrariesContainer extends Component {
     appendScriptToDOM(url);
 
     // if not in default library list -> add with API call
-    this.props.onAddDefaultLibraryIfNew(library);
+    if (!isDefaultLibrary) {
+      this.props.onAddDefaultLibraryIfNew(library);
+    }
   }
 
   removeSelectedLibrary(url, index) {

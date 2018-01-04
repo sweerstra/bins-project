@@ -32,7 +32,7 @@ class BinsContainer extends Component {
           <img src={images.search} alt="Search Bin"/>
         </div>
         <div className="bins">
-          {fetching && <div style={{ padding: '8px' }}>Loading...</div>}
+          {fetching && <div className="loading">Loading...</div>}
           {filteredBins.map((bin, index) =>
             <div className={bin.id === selectedBin.id ? 'bin active' : 'bin'}
                  onClick={() => onSelectBin(bin)}

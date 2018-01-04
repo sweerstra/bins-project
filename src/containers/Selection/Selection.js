@@ -17,13 +17,19 @@ class SelectionContainer extends Component {
     this.state = { selection: '', editing: false };
   }
 
+  static mapLog(log) {
+    if (log === undefined) return 'undefined';
+    if (log === null) return 'null';
+    if (typeof log === 'object') return JSON.stringify(log);
+    return log;
+  }
+
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown);
 
-    this.consoleLog = console.log;
-    console.log = (...messages) => {
-      this.props.onAddLog(`>> ${messages.join(' ')}`, 'code');
-      this.consoleLog(...messages);
+    window.log = (...messages) => {
+      this.props.onAddLog(`>> ${messages.map(SelectionContainer.mapLog).join(' ')}`, 'code');
+      console.log(...messages);
     };
   }
 
@@ -94,7 +100,7 @@ class SelectionContainer extends Component {
         <div className="selection">
           <div className="selection-header">
             {binNameEditor}
-            <div className="selection-header-buttons">
+            <div className="icon-buttons">
               <img className="clickable"
                    src={images.play}
                    onClick={this.runCode.bind(this)}

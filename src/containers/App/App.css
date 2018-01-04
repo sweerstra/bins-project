@@ -30,6 +30,13 @@
 
 .textbox:focus { outline: none; }
 
+.icon-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80px;
+}
+
 .feather:hover {
   stroke: var(--main-red);
   cursor: pointer;
