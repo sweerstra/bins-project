@@ -17,24 +17,24 @@ class SelectionContainer extends Component {
     this.state = { selection: '', editing: false };
   }
 
-  static mapLog(log) {
+  static formatLog(log) {
     if (log === undefined) return 'undefined';
     if (log === null) return 'null';
     if (typeof log === 'object') return JSON.stringify(log);
     return log;
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown);
+  }
+
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown);
 
     window.log = (...messages) => {
-      this.props.onAddLog(`>> ${messages.map(SelectionContainer.mapLog).join(' ')}`, 'code');
+      this.props.onAddLog(`>> ${messages.map(SelectionContainer.formatLog).join(' ')}`, 'code');
       console.log(...messages);
     };
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onKeyDown);
   }
 
   componentDidUpdate() {
@@ -53,13 +53,6 @@ class SelectionContainer extends Component {
       this.runCode();
       e.preventDefault();
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
-
-    const { selectedBin: { selection } } = nextProps;
-    this.setState({ selection });
   }
 
   render() {
@@ -198,6 +191,13 @@ class SelectionContainer extends Component {
     } else {
       onSaveBin(id, selection);
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
+
+    const { selectedBin: { selection } } = nextProps;
+    this.setState({ selection });
   }
 }
 

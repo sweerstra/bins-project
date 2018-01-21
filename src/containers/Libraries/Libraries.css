@@ -55,7 +55,7 @@
   justify-content: space-between;
 }
 
-.add-library input {
+.add-library input[type=text] {
   width: 160px;
   margin-right: 8px;
   padding: 4px 0;

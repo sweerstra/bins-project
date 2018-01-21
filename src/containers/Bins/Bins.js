@@ -16,12 +16,9 @@ class BinsContainer extends Component {
   }
 
   render() {
-    const search = this.state.search.toLowerCase();
     const { bins, fetching, selectedBin, onSelectBin } = this.props;
-
-    const filteredBins = search
-      ? bins.filter(bin => bin.name.toLowerCase().includes(search))
-      : bins;
+    const searchRegex = new RegExp(this.state.search, 'gi');
+    const filteredBins = bins.filter(bin => bin.name.match(searchRegex));
 
     return (
       <aside className="Bins-Container">

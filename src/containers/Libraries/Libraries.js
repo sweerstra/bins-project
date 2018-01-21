@@ -52,32 +52,28 @@ class LibrariesContainer extends Component {
                onClick={() => onHideLibraryMenu()}
                alt="Hide Libraries"/>
         </div>
-        <div className="add-library">
-          <input className="textbox"
+        <form className="add-library"
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.addSelectedLibrary(this.input.value);
+                e.target.reset();
+              }}>
+          <input type="text"
+                 className="textbox"
                  placeholder="Search or add URL"
                  spellCheck="false"
                  onChange={this.onAddLibraryInputChange.bind(this)}
-                 onKeyDown={({ keyCode, target }) => {
-                   if (keyCode === 13) {
-                     this.addSelectedLibrary(target.value);
-                     this.input.value = '';
-                   }
-                 }}
                  ref={input => this.input = input}/>
           {filtered.length === 0 && <div className="icon-buttons">
-            <img src={images.plusCircleSmall}
-                 className="clickable"
-                 onClick={() => {
-                   this.addSelectedLibrary(this.input.value);
-                   this.input.value = '';
-                 }}
-                 alt="Add Library"/>
+            <input type="image"
+                   className="clickable"
+                   src={images.plusCircleSmall}/>
             <img src={images.list}
                  className="clickable"
                  onClick={this.showDefaultLibraries.bind(this)}
                  alt="Show Default Libraries"/>
           </div>}
-        </div>
+        </form>
         <div className="autocomplete-suggestions">
           {filtered.map((suggestion, index) =>
             <p onClick={() => this.selectDefaultLibrary(suggestion)} key={index}>
@@ -111,11 +107,8 @@ class LibrariesContainer extends Component {
 
   onAddLibraryInputChange(e) {
     const { defaultLibraries } = this.props;
-    const value = e.target.value.toLowerCase();
-
-    const filtered = value
-      ? defaultLibraries.filter(lib => lib.name.toLowerCase().includes(value))
-      : [];
+    const searchRegex = new RegExp(e.target.value, 'gi');
+    const filtered = defaultLibraries.filter(lib => lib.name.match(searchRegex));
 
     this.setState(({ filtered }));
   }
