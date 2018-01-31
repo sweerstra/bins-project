@@ -8,7 +8,22 @@ import plusCircle from './images/plus-circle.svg';
 import plusCircleSmall from './images/plus-circle-small.svg';
 import save from './images/save.svg';
 import search from './images/search.svg';
+import share from './images/share.svg';
 import trash from './images/trash.svg';
 import x from './images/x.svg';
 
-export default { edit, info, list, minusCircle, play, plus, plusCircle, plusCircleSmall, save, search, trash, x };
+export default {
+  edit,
+  info,
+  list,
+  minusCircle,
+  play,
+  plus,
+  plusCircle,
+  plusCircleSmall,
+  save,
+  search,
+  share,
+  trash,
+  x
+};

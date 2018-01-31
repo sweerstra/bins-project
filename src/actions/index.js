@@ -23,7 +23,7 @@ export const selectBin = bin => ({
   bin
 });
 
-export const addBin = (name, selection = '') => ({
+export const addBin = (name = '', selection = '') => ({
   type: types.ADD_BIN,
   name,
   selection

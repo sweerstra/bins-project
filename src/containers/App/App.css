@@ -1,5 +1,5 @@
 .App {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -41,11 +41,3 @@
   stroke: var(--main-red);
   cursor: pointer;
 }
-
-.invisible { visibility: hidden; }
-
-.flex { display: flex; }
-
-.center-items { align-items: center; }
-
-.center-content { justify-content: center; }

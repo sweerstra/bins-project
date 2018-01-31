@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addAndSelectBin, addLog, editBin, saveBin, selectBin } from '../../actions/index';
+import { addAndSelectBin, addLog, clearConsole, editBin, saveBin, selectBin } from '../../actions/index';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
-import images from '../../assets/index';
+import images from '../../assets/images';
 import './Selection.css';
-import ConsoleLog from '../ConsoleLog/ConsoleLog';
-import LibrariesContainer from '../Libraries/Libraries';
+import ConsoleLog from '../../components/ConsoleLog/ConsoleLog';
+import LibraryList from '../LibraryList';
 
 class SelectionContainer extends Component {
   constructor() {
@@ -37,6 +37,13 @@ class SelectionContainer extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
+
+    const { selectedBin: { selection } } = nextProps;
+    this.setState({ selection });
+  }
+
   componentDidUpdate() {
     if (this.editingInput) {
       this.editingInput.focus();
@@ -57,7 +64,7 @@ class SelectionContainer extends Component {
 
   render() {
     const { selection, editing } = this.state;
-    const { selectedBin: { id, name } } = this.props;
+    const { selectedBin: { id, name }, logs } = this.props;
     const selected = id ? name : 'Empty bin';
 
     const binNameEditor = editing
@@ -77,15 +84,14 @@ class SelectionContainer extends Component {
              alt="Save Bin"/>
       </div>
       : <div
-        className={`edit-bin-name ${id ? 'clickable' : ''}`}
+        className={`edit-bin-name clickable`}
         onClick={this.edit.bind(this)}>
         <span>{selected}</span>
-        {Boolean(id) &&
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff"
              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit">
           <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
           <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
-        </svg>}
+        </svg>
       </div>;
 
     return (
@@ -93,7 +99,7 @@ class SelectionContainer extends Component {
         <div className="selection">
           <div className="selection-header">
             {binNameEditor}
-            <div className="icon-buttons">
+            <div className="icon-buttons" style={{ width: '120px' }}>
               <img className="clickable"
                    src={images.play}
                    onClick={this.runCode.bind(this)}
@@ -104,6 +110,11 @@ class SelectionContainer extends Component {
                                 onClick={this.saveBin.bind(this)}
                                 title="Save (Ctrl+S)"
                                 alt="Save"/>}
+              <img className="clickable"
+                   src={images.share}
+                   onClick={this.shareCode.bind(this)}
+                   title="Share Code"
+                   alt="Share Code"/>
             </div>
           </div>
           <div className="selection-editor">
@@ -123,8 +134,10 @@ class SelectionContainer extends Component {
               }}/>
           </div>
         </div>
-        <ConsoleLog/>
-        <LibrariesContainer/>
+        <ConsoleLog
+          logs={logs}
+          onClearConsole={this.props.onClearConsole}/>
+        <LibraryList/>
       </main>
     );
   };
@@ -193,11 +206,8 @@ class SelectionContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
-
-    const { selectedBin: { selection } } = nextProps;
-    this.setState({ selection });
+  shareCode() {
+    console.log(this.state.selection);
   }
 }
 
@@ -206,11 +216,17 @@ SelectionContainer.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     selection: PropTypes.string
-  })
+  }),
+  logs: PropTypes.arrayOf(
+    PropTypes.shape({
+      message: PropTypes.string,
+      logType: PropTypes.string
+    })
+  )
 };
 
-const mapStateToProps = ({ bins, selectedBin }) => {
-  return ({ ...bins, selectedBin });
+const mapStateToProps = ({ selectedBin, logs }) => {
+  return ({ selectedBin, logs });
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -218,7 +234,8 @@ const mapDispatchToProps = (dispatch) => ({
   onEditBin: (id, name) => dispatch(editBin(id, name)),
   onAddAndSelectBin: (name, selection) => dispatch(addAndSelectBin(name, selection)),
   onSaveBin: (id, selection) => dispatch(saveBin(id, selection)),
-  onAddLog: (message, logType) => dispatch(addLog(message, logType))
+  onAddLog: (message, logType) => dispatch(addLog(message, logType)),
+  onClearConsole: () => dispatch(clearConsole())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectionContainer);

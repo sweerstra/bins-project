@@ -1,14 +1,14 @@
 import React from 'react';
-import NavigationBar from '../Navigation/Navigation';
-import BinsContainer from '../Bins/Bins';
+import Navigation from '../NavigationBar/NavigationBar';
+import BinsList from '../BinsList';
 import SelectionContainer from '../Selection/Selection';
 import './App.css';
 
 const App = () => (
   <div className="App">
-    <NavigationBar/>
+    <Navigation/>
     <div className="main-content">
-      <BinsContainer/>
+      <BinsList/>
       <SelectionContainer/>
     </div>
   </div>
