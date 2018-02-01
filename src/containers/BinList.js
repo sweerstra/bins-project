@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { fetchBins, removeBin, selectBin } from '../actions/index';
 import Bins from '../components/Bins/Bins';
 
-class BinsList extends Component {
+class BinList extends Component {
   constructor() {
     super();
     this.state = { search: '' };
@@ -17,14 +17,14 @@ class BinsList extends Component {
   handleSearchChange = (e) => {
     this.setState({ search: e.target.value });
   };
-  removeBin = (e, id) => {
+  removeBin = (e, _id) => {
     e.stopPropagation();
 
     const { selectedBin, onRemoveBin, onSelectBin } = this.props;
-    onRemoveBin(id);
+    onRemoveBin(_id);
 
-    if (id === selectedBin.id) {
-      onSelectBin({ id: 0, name: '', selection: '' });
+    if (_id === selectedBin._id) {
+      onSelectBin({ _id: '', name: '', selection: '' });
     }
   };
 
@@ -41,11 +41,11 @@ class BinsList extends Component {
   }
 }
 
-BinsList.propTypes = {
+BinList.propTypes = {
   fetching: PropTypes.bool,
   bins: PropTypes.array,
   selectedBin: PropTypes.shape({
-    id: PropTypes.number,
+    _id: PropTypes.number,
     name: PropTypes.string,
     selection: PropTypes.string
   })
@@ -58,7 +58,7 @@ const mapStateToProps = ({ bins, selectedBin }) => {
 const mapDispatchToProps = (dispatch) => ({
   onFetchBins: () => dispatch(fetchBins()),
   onSelectBin: (bin) => dispatch(selectBin(bin)),
-  onRemoveBin: (id) => dispatch(removeBin(id))
+  onRemoveBin: (_id) => dispatch(removeBin(_id))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BinsList);
+export default connect(mapStateToProps, mapDispatchToProps)(BinList);

@@ -6,21 +6,30 @@ class Request {
   post(url, data) {
     return this._request(url, {
       method: 'post',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
   }
 
   put(url, data) {
     return this._request(url, {
       method: 'put',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
   }
 
   delete(url, data) {
     return this._request(url, {
       method: 'delete',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
   }
 

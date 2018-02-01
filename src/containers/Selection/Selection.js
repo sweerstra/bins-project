@@ -38,7 +38,7 @@ class SelectionContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.selectedBin.id === nextProps.selectedBin.id) return;
+    if (this.props.selectedBin._id === nextProps.selectedBin._id) return;
 
     const { selectedBin: { selection } } = nextProps;
     this.setState({ selection });
@@ -64,8 +64,8 @@ class SelectionContainer extends Component {
 
   render() {
     const { selection, editing } = this.state;
-    const { selectedBin: { id, name }, logs } = this.props;
-    const selected = id ? name : 'Empty bin';
+    const { selectedBin: { _id, name }, logs } = this.props;
+    const selected = _id ? name : 'Empty bin';
 
     const binNameEditor = editing
       ? <div className="add-bin">
@@ -143,14 +143,14 @@ class SelectionContainer extends Component {
   };
 
   saveBinNameClick() {
-    const { selectedBin: { id } } = this.props;
+    const { selectedBin: { _id } } = this.props;
 
     if (this.editingInput) {
       const { value } = this.editingInput;
-      if (id === 0) {
+      if (!_id) {
         this.saveEmptyBin(value);
       } else {
-        this.editBinName(id, value);
+        this.editBinName(_id, value);
       }
     }
 
@@ -167,10 +167,10 @@ class SelectionContainer extends Component {
     this.props.onAddAndSelectBin(name, this.state.selection);
   }
 
-  editBinName(id, name) {
+  editBinName(_id, name) {
     const { onEditBin, onSelectBin } = this.props;
-    onEditBin(id, name);
-    onSelectBin({ id, name });
+    onEditBin(_id, name);
+    onSelectBin({ _id, name });
   }
 
   runCode() {
@@ -197,12 +197,12 @@ class SelectionContainer extends Component {
 
   saveBin() {
     const { selection } = this.state;
-    const { selectedBin: { id }, onSaveBin } = this.props;
+    const { selectedBin: { _id }, onSaveBin } = this.props;
 
-    if (id === 0) {
+    if (!_id) {
       this.edit();
     } else {
-      onSaveBin(id, selection);
+      onSaveBin(_id, selection);
     }
   }
 
@@ -213,7 +213,7 @@ class SelectionContainer extends Component {
 
 SelectionContainer.propTypes = {
   selectedBin: PropTypes.shape({
-    id: PropTypes.number,
+    _id: PropTypes.string,
     name: PropTypes.string,
     selection: PropTypes.string
   }),
@@ -231,9 +231,9 @@ const mapStateToProps = ({ selectedBin, logs }) => {
 
 const mapDispatchToProps = (dispatch) => ({
   onSelectBin: (bin) => dispatch(selectBin(bin)),
-  onEditBin: (id, name) => dispatch(editBin(id, name)),
+  onEditBin: (_id, name) => dispatch(editBin(_id, name)),
   onAddAndSelectBin: (name, selection) => dispatch(addAndSelectBin(name, selection)),
-  onSaveBin: (id, selection) => dispatch(saveBin(id, selection)),
+  onSaveBin: (_id, selection) => dispatch(saveBin(_id, selection)),
   onAddLog: (message, logType) => dispatch(addLog(message, logType)),
   onClearConsole: () => dispatch(clearConsole())
 });

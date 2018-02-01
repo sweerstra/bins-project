@@ -1,6 +1,6 @@
 import BinsApi from '../api/bins';
 import LibrariesApi from '../api/libraries';
-import * as types from '../constants/ActionTypes'
+import * as types from '../constants/ActionTypes';
 
 export const requestBins = () => ({
   type: types.REQUEST_BINS
@@ -23,37 +23,34 @@ export const selectBin = bin => ({
   bin
 });
 
-export const addBin = (name = '', selection = '') => ({
+const addBin = (_id = '', name = '', selection = '') => ({
   type: types.ADD_BIN,
+  _id,
   name,
   selection
 });
 
-export const removeBin = (id) => (dispatch, getState) => {
-  dispatch({ type: types.REMOVE_BIN, id });
-  saveAll(getState());
+export const removeBin = (_id) => (dispatch) => {
+  dispatch({ type: types.REMOVE_BIN, _id });
+  BinsApi.removeBin(_id);
 };
 
-const saveAll = (state) => {
-  const bins = state.bins.bins || [];
-  BinsApi.setBins(bins);
+export const saveBin = (_id, selection) => (dispatch) => {
+  dispatch({ type: types.SAVE_BIN, _id, selection });
+  BinsApi.saveBin({ _id, selection });
 };
 
-export const saveBin = (id, selection) => (dispatch, getState) => {
-  dispatch({ type: types.SAVE_BIN, id, selection });
-  saveAll(getState());
+export const addAndSelectBin = (name, selection) => (dispatch) => {
+  BinsApi.addBin({ name, selection })
+    .then(({ insertedId: _id }) => {
+      dispatch(addBin(_id, name, selection));
+      dispatch(selectBin({ _id, name, selection }));
+    });
 };
 
-export const addAndSelectBin = (name, selection) => (dispatch, getState) => {
-  dispatch(addBin(name, selection));
-  const { bins: { bins } } = getState();
-  dispatch(selectBin(bins[bins.length - 1]));
-  saveAll(getState());
-};
-
-export const editBin = (id, name) => (dispatch, getState) => {
-  dispatch({ type: types.EDIT_BIN, id, name });
-  saveAll(getState());
+export const editBin = (_id, name) => (dispatch) => {
+  dispatch({ type: types.EDIT_BIN, _id, name });
+  BinsApi.saveBin({ _id, name });
 };
 
 export const addLog = (message, logType) => ({

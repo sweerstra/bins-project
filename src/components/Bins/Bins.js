@@ -13,12 +13,12 @@ const Bins = ({ fetching, bins, selectedBin, onSelectBin, onRemoveBin, onSearchB
     <div className="bins">
       {fetching && <div className="loading">Loading...</div>}
       {bins.map((bin, index) =>
-        <div className={bin.id === selectedBin.id ? 'bin active' : 'bin'}
+        <div className={bin._id === selectedBin._id ? 'bin active' : 'bin'}
              onClick={() => onSelectBin(bin)}
              key={index}>
           {bin.name}
           <div className="remove-bin"
-               onClick={(e) => onRemoveBin(e, bin.id)}>
+               onClick={(e) => onRemoveBin(e, bin._id)}>
             <img src={images.x} alt="Remove"/>
           </div>
         </div>

@@ -3,15 +3,8 @@
   --main-dark: #262A34;
 }
 
-html, body {
-  height: 100%;
-}
-
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  box-sizing: border-box;
 }
-
-#root { height: 100%; }

@@ -1,6 +1,6 @@
 import React from 'react';
 import Navigation from '../NavigationBar/NavigationBar';
-import BinsList from '../BinsList';
+import BinList from '../BinList';
 import SelectionContainer from '../Selection/Selection';
 import './App.css';
 
@@ -8,7 +8,7 @@ const App = () => (
   <div className="App">
     <Navigation/>
     <div className="main-content">
-      <BinsList/>
+      <BinList/>
       <SelectionContainer/>
     </div>
   </div>

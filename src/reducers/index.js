@@ -18,7 +18,7 @@ const updateBinProperty = (state, action, prop) => {
   return {
     ...state,
     bins: state.bins.map(bin =>
-      bin.id === action.id
+      bin._id === action._id
         ? { ...bin, [prop]: action[prop] }
         : bin
     )
@@ -38,15 +38,14 @@ const bins = (state = { bins: [], fetching: false }, action) => {
         fetching: false
       };
     case ADD_BIN:
-      const id = state.bins.length
-        ? Math.max(...state.bins.map(bin => bin.id)) + 1
-        : 1;
+      const { _id, name, selection } = action;
+      console.log(action);
       return {
         ...state,
-        bins: [...state.bins, { id, name: action.name, selection: action.selection }]
+        bins: [...state.bins, { _id, name, selection }]
       };
     case REMOVE_BIN:
-      const index = state.bins.findIndex(bin => bin.id === action.id);
+      const index = state.bins.findIndex(bin => bin._id === action._id);
       if (index === -1) return state;
 
       return {
@@ -65,10 +64,10 @@ const bins = (state = { bins: [], fetching: false }, action) => {
   }
 };
 
-const selectedBin = (state = { id: 0, name: '', selection: '' }, action) => {
+const selectedBin = (state = { _id: '', name: '', selection: '' }, action) => {
   switch (action.type) {
     case SELECT_BIN:
-      return { ...action.bin };
+      return action.bin;
     default:
       return state;
   }
