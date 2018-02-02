@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import images from '../../assets/images';
 import './Bins.css';
 
@@ -13,15 +14,13 @@ const Bins = ({ fetching, bins, selectedBin, onSelectBin, onRemoveBin, onSearchB
     <div className="bins">
       {fetching && <div className="loading">Loading...</div>}
       {bins.map((bin, index) =>
-        <div className={bin._id === selectedBin._id ? 'bin active' : 'bin'}
-             onClick={() => onSelectBin(bin)}
-             key={index}>
+        <Link to={`/${bin._id}`} className={bin._id === selectedBin._id ? 'bin active' : 'bin'} key={index}>
           {bin.name}
           <div className="remove-bin"
                onClick={(e) => onRemoveBin(e, bin._id)}>
             <img src={images.x} alt="Remove"/>
           </div>
-        </div>
+        </Link>
       )}
     </div>
   </aside>

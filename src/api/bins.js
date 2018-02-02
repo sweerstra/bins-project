@@ -1,6 +1,10 @@
 import Request from '../api/Request';
 import { BINS_API } from '../constants/Keys';
 
+const getBin = (_id) => {
+  return Request.get(`${BINS_API}/bin/${_id}`);
+};
+
 const getBins = () => {
   return Request.get(`${BINS_API}/bins`);
 };
@@ -17,4 +21,4 @@ const removeBin = (_id) => {
   return Request.delete(`${BINS_API}/bin/${_id}`);
 };
 
-export default { getBins, addBin, saveBin, removeBin };
+export default { getBin, getBins, addBin, saveBin, removeBin };

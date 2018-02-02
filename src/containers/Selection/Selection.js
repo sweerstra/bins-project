@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addAndSelectBin, addLog, clearConsole, editBin, saveBin, selectBin } from '../../actions/index';
+import {
+  addAndSelectBin,
+  addLog,
+  clearConsole,
+  editBin,
+  fetchSingleBin,
+  saveBin,
+  selectBin,
+  selectBinByID
+} from '../../actions/index';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
@@ -35,6 +44,30 @@ class SelectionContainer extends Component {
       this.props.onAddLog(`>> ${messages.map(SelectionContainer.formatLog).join(' ')}`, 'code');
       console.log(...messages);
     };
+
+    const { binId } = this.props.match.params;
+    console.log(binId, 'in mount');
+    if (binId) {
+      this.props.onFetchSingleBin(binId);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.binId === this.props.match.params.binId) return;
+
+    const { binId } = this.props.match.params;
+
+    if (binId) {
+      this.props.onSelectBinById(binId);
+    } else {
+      this.props.onSelectBin({ _id: '', name: '', selection: '' });
+    }
+
+    if (this.editingInput) {
+      this.editingInput.focus();
+      const { selectedBin } = this.props;
+      this.editingInput.value = selectedBin.name;
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,14 +75,6 @@ class SelectionContainer extends Component {
 
     const { selectedBin: { selection } } = nextProps;
     this.setState({ selection });
-  }
-
-  componentDidUpdate() {
-    if (this.editingInput) {
-      this.editingInput.focus();
-      const { selectedBin } = this.props;
-      this.editingInput.value = selectedBin.name;
-    }
   }
 
   onKeyDown(e) {
@@ -65,7 +90,7 @@ class SelectionContainer extends Component {
   render() {
     const { selection, editing } = this.state;
     const { selectedBin: { _id, name }, logs } = this.props;
-    const selected = _id ? name : 'Empty bin';
+    const selectedBinName = _id ? name : 'Empty bin';
 
     const binNameEditor = editing
       ? <div className="add-bin">
@@ -86,7 +111,7 @@ class SelectionContainer extends Component {
       : <div
         className={`edit-bin-name clickable`}
         onClick={this.edit.bind(this)}>
-        <span>{selected}</span>
+        <span>{selectedBinName}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff"
              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit">
           <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
@@ -168,9 +193,9 @@ class SelectionContainer extends Component {
   }
 
   editBinName(_id, name) {
-    const { onEditBin, onSelectBin } = this.props;
+    const { onEditBin, onSelectBinById } = this.props;
     onEditBin(_id, name);
-    onSelectBin({ _id, name });
+    onSelectBinById(_id);
   }
 
   runCode() {
@@ -225,12 +250,14 @@ SelectionContainer.propTypes = {
   )
 };
 
-const mapStateToProps = ({ selectedBin, logs }) => {
+const mapStateToProps = ({ bins: { selectedBin }, logs }) => {
   return ({ selectedBin, logs });
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  onFetchSingleBin: (_id) => dispatch(fetchSingleBin(_id)),
   onSelectBin: (bin) => dispatch(selectBin(bin)),
+  onSelectBinById: (_id) => dispatch(selectBinByID(_id)),
   onEditBin: (_id, name) => dispatch(editBin(_id, name)),
   onAddAndSelectBin: (name, selection) => dispatch(addAndSelectBin(name, selection)),
   onSaveBin: (_id, selection) => dispatch(saveBin(_id, selection)),

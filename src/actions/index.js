@@ -11,16 +11,29 @@ const receiveBins = bins => ({
   bins
 });
 
-export const fetchBins = () => (dispatch) => {
+export const fetchBins = () => dispatch => {
   dispatch(requestBins());
   BinsApi.getBins().then((bins) => {
     dispatch(receiveBins(bins));
   });
 };
 
+export const fetchSingleBin = _id => dispatch => {
+  BinsApi.getBin(_id).then(bin => {
+    if (bin) {
+      dispatch(selectBin(bin));
+    }
+  });
+};
+
 export const selectBin = bin => ({
   type: types.SELECT_BIN,
   bin
+});
+
+export const selectBinByID = _id => ({
+  type: types.SELECT_BIN_BY_ID,
+  _id
 });
 
 const addBin = (_id = '', name = '', selection = '') => ({
@@ -30,25 +43,24 @@ const addBin = (_id = '', name = '', selection = '') => ({
   selection
 });
 
-export const removeBin = (_id) => (dispatch) => {
+export const removeBin = _id => dispatch => {
   dispatch({ type: types.REMOVE_BIN, _id });
   BinsApi.removeBin(_id);
 };
 
-export const saveBin = (_id, selection) => (dispatch) => {
+export const saveBin = (_id, selection) => dispatch => {
   dispatch({ type: types.SAVE_BIN, _id, selection });
   BinsApi.saveBin({ _id, selection });
 };
 
-export const addAndSelectBin = (name, selection) => (dispatch) => {
-  BinsApi.addBin({ name, selection })
-    .then(({ insertedId: _id }) => {
-      dispatch(addBin(_id, name, selection));
-      dispatch(selectBin({ _id, name, selection }));
-    });
+export const addAndSelectBin = (name, selection) => dispatch => {
+  BinsApi.addBin({ name, selection }).then(({ insertedId: _id }) => {
+    dispatch(addBin(_id, name, selection));
+    dispatch(selectBin({ _id, name, selection }));
+  });
 };
 
-export const editBin = (_id, name) => (dispatch) => {
+export const editBin = (_id, name) => dispatch => {
   dispatch({ type: types.EDIT_BIN, _id, name });
   BinsApi.saveBin({ _id, name });
 };
@@ -63,18 +75,18 @@ export const clearConsole = () => ({
   type: types.CLEAR_CONSOLE
 });
 
-const receiveDefaultLibraries = (defaultLibraries) => ({
+const receiveDefaultLibraries = defaultLibraries => ({
   type: types.RECEIVE_DEFAULT_LIBRARIES,
   defaultLibraries
 });
 
-export const fetchDefaultLibraries = () => (dispatch) => {
+export const fetchDefaultLibraries = () => dispatch => {
   LibrariesApi.getLibraries().then((libraries) => {
     dispatch(receiveDefaultLibraries(libraries));
   });
 };
 
-export const addDefaultLibraryIfNew = (library) => (dispatch, getState) => {
+export const addDefaultLibraryIfNew = library => (dispatch, getState) => {
   const initialLength = getState().libraries.defaultLibraries.length;
   dispatch({ type: types.ADD_LIBRARY_IF_NEW, library });
   const { defaultLibraries } = getState().libraries;
@@ -84,7 +96,7 @@ export const addDefaultLibraryIfNew = (library) => (dispatch, getState) => {
   }
 };
 
-export const toggleLibraryMenu = (librariesVisible) => ({
+export const toggleLibraryMenu = librariesVisible => ({
   type: types.TOGGLE_LIBRARIES,
   librariesVisible
 });

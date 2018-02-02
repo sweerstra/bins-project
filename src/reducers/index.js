@@ -11,6 +11,7 @@ import {
   REQUEST_BINS,
   SAVE_BIN,
   SELECT_BIN,
+  SELECT_BIN_BY_ID,
   TOGGLE_LIBRARIES
 } from '../constants/ActionTypes';
 
@@ -25,7 +26,7 @@ const updateBinProperty = (state, action, prop) => {
   };
 };
 
-const bins = (state = { bins: [], fetching: false }, action) => {
+const bins = (state = { bins: [], selectedBin: { _id: '', name: '', selection: '' }, fetching: false }, action) => {
   switch (action.type) {
     case REQUEST_BINS:
       return {
@@ -34,12 +35,23 @@ const bins = (state = { bins: [], fetching: false }, action) => {
       };
     case RECEIVE_BINS:
       return {
+        ...state,
         bins: action.bins,
         fetching: false
       };
+    case SELECT_BIN:
+      return {
+        ...state,
+        selectedBin: action.bin
+      };
+    case SELECT_BIN_BY_ID:
+      const id = action._id;
+      return {
+        ...state,
+        selectedBin: state.bins.find(bin => bin._id === id)
+      };
     case ADD_BIN:
       const { _id, name, selection } = action;
-      console.log(action);
       return {
         ...state,
         bins: [...state.bins, { _id, name, selection }]
@@ -59,15 +71,6 @@ const bins = (state = { bins: [], fetching: false }, action) => {
       return updateBinProperty(state, action, 'name');
     case SAVE_BIN:
       return updateBinProperty(state, action, 'selection');
-    default:
-      return state;
-  }
-};
-
-const selectedBin = (state = { _id: '', name: '', selection: '' }, action) => {
-  switch (action.type) {
-    case SELECT_BIN:
-      return action.bin;
     default:
       return state;
   }
@@ -114,4 +117,4 @@ const libraries = (state = { defaultLibraries: [], librariesVisible: false }, ac
   }
 };
 
-export default combineReducers({ bins, selectedBin, logs, libraries });
+export default combineReducers({ bins, logs, libraries });

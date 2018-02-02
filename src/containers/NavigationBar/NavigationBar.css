@@ -8,7 +8,12 @@
   justify-content: space-between;
 }
 
-.Navigation-Container-title { font-size: 1.5em; }
+.Navigation-Container-title {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5em;
+}
 
 .add-bin {
   display: flex;

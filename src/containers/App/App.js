@@ -1,15 +1,16 @@
 import React from 'react';
-import Navigation from '../NavigationBar/NavigationBar';
+import { Route } from 'react-router-dom';
+import NavigationBar from '../NavigationBar/NavigationBar';
 import BinList from '../BinList';
 import SelectionContainer from '../Selection/Selection';
 import './App.css';
 
 const App = () => (
   <div className="App">
-    <Navigation/>
+    <NavigationBar/>
     <div className="main-content">
       <BinList/>
-      <SelectionContainer/>
+      <Route path="/:binId?" component={SelectionContainer}/>
     </div>
   </div>
 );

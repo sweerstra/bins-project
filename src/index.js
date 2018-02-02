@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import reducers from './reducers';
 import App from './containers/App/App';
@@ -15,7 +16,9 @@ const store = createStore(
 
 render(
   <Provider store={store}>
-    <App/>
+    <BrowserRouter>
+      <App/>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

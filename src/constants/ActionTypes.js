@@ -1,6 +1,7 @@
 export const RECEIVE_BINS = 'RECEIVE_BINS';
 export const REQUEST_BINS = 'REQUEST_BINS';
 export const SELECT_BIN = 'SELECT_BIN';
+export const SELECT_BIN_BY_ID = 'SELECT_BIN_BY_ID';
 export const ADD_BIN = 'ADD_BIN';
 export const REMOVE_BIN = 'REMOVE_BIN';
 export const EDIT_BIN = 'EDIT_BIN';
