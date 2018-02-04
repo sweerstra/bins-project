@@ -14,13 +14,13 @@ const Bins = ({ bins, isFetching, selectedBin, onSelectBin, onRemoveBin, onSearc
     </div>
     <div className="bins__container">
       {isFetching && <div className="bins__loading">Loading...</div>}
-      {bins.map((bin, index) =>
-        <Link to={`/${bin._id}`}
-              className={bin._id === selectedBin._id ? 'bin active' : 'bin'}
+      {bins.map(({ name, _id }, index) =>
+        <Link to={`/${_id}`}
+              className={_id === selectedBin._id ? 'bin active' : 'bin'}
               key={index}>
-          {bin.name}
+          {name}
           <div className="bin__remove"
-               onClick={(e) => onRemoveBin(e, bin._id)}>
+               onClick={(e) => onRemoveBin(e, _id, _id === selectedBin._id)}>
             <img src={images.xCircle} alt="Remove Bin"/>
           </div>
         </Link>

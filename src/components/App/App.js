@@ -10,7 +10,7 @@ import './App.css';
 const App = () => (
   <div className="App">
     <NavigationBar/>
-    <BinList/>
+    <Route path="/" component={BinList}/>
     <Route path="/:binId?" component={SelectionContainer}/>
     <ConsoleLog/>
     <LibraryList/>

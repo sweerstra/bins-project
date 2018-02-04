@@ -30,18 +30,14 @@ class BinList extends Component {
     this.setState({ search: target.value });
   };
 
-  removeBin = (e, _id) => {
-    e.stopPropagation();
+  removeBin = (e, _id, isSelected) => {
+    e.preventDefault();
 
-    const { selectedBin, onRemoveBin } = this.props;
+    this.props.onRemoveBin(_id);
 
-    if (_id === selectedBin._id) {
-      console.log('about to remove selected bin');
-
-      // onSelectBin({ _id: '', name: '', selection: '' });
+    if (isSelected) {
+      this.props.history.push('/');
     }
-
-    onRemoveBin(_id);
   };
 }
 

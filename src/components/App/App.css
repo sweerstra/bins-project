@@ -25,7 +25,7 @@ header { grid-area: header; }
 
 .bins { grid-area: bins; }
 
-.selection { grid-area: selection; }
+.Selection-Container { grid-area: selection; }
 
 .console { grid-area: console; }
 

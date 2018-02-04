@@ -71,6 +71,8 @@ class SelectionContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+
     if (this.props.selectedBin._id === nextProps.selectedBin._id) return;
 
     const { selectedBin: { name, selection } } = nextProps;
@@ -208,7 +210,10 @@ class SelectionContainer extends Component {
   }
 
   saveEmptyBin(name) {
-    this.props.onAddAndSelectBin(name, this.state.selection);
+    this.props.onAddAndSelectBin(name, this.state.selection)
+      .then(_id => {
+        this.props.history.push(`/${_id}`);
+      });
   }
 
   editBinName(_id, name) {

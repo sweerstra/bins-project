@@ -4,7 +4,7 @@ import './NavigationBar.css';
 
 const NavigationBar = () => (
   <header className="Navigation-Container">
-    <Link to="/" className="Navigation-Container-title">Bins Project</Link>
+    <Link to="/" className="Navigation-Container-title">Bins Projectje</Link>
   </header>
 );
 
