@@ -1,7 +1,9 @@
 import clipboard from './images/clipboard.svg';
 import edit from './images/edit.svg';
 import externalLink from './images/external-link.svg';
+import folderMinus from './images/folder-minus.svg';
 import folderPlus from './images/folder-plus.svg';
+import github from './images/github.svg';
 import info from './images/info.svg';
 import list from './images/list.svg';
 import minusCircle from './images/minus-circle.svg';
@@ -20,7 +22,9 @@ export default {
   clipboard,
   edit,
   externalLink,
+  folderMinus,
   folderPlus,
+  github,
   info,
   list,
   minusCircle,

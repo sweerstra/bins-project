@@ -3,6 +3,11 @@ class Request {
     return this._request(url);
   }
 
+  getText(url) {
+    return fetch(url)
+      .then(resp => resp.text());
+  }
+
   post(url, data) {
     return this._request(url, {
       method: 'post',
@@ -33,7 +38,7 @@ class Request {
     });
   }
 
-  async _request(url, options) {
+  _request(url, options) {
     return fetch(url, options)
       .then(resp => resp.json())
       .catch(err => err);

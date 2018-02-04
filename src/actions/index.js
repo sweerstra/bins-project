@@ -1,5 +1,6 @@
 import BinsApi from '../api/bins';
 import LibrariesApi from '../api/libraries';
+import DataApi from '../api/data';
 import * as types from '../constants/ActionTypes';
 
 export const requestBins = () => ({
@@ -53,7 +54,7 @@ export const saveBin = (_id, selection) => dispatch => {
   BinsApi.saveBin({ _id, selection });
 };
 
-export const addAndSelectBin = (name, selection) => dispatch => {
+export const createBin = (name, selection) => dispatch => {
   return BinsApi.addBin({ name, selection }).then(({ insertedId: _id }) => {
     dispatch(addBin(_id, name, selection));
     return _id;
@@ -100,3 +101,7 @@ export const toggleLibraryMenu = librariesVisible => ({
   type: types.TOGGLE_LIBRARIES,
   librariesVisible
 });
+
+export const importURLAsBin = url => {
+  return DataApi.getCode(url);
+};

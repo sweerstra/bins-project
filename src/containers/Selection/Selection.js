@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  addAndSelectBin,
   addLog,
+  createBin,
   editBin,
   fetchSingleBin,
+  importURLAsBin,
   saveBin,
   selectBin,
   selectBinByID,
@@ -71,8 +72,6 @@ class SelectionContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-
     if (this.props.selectedBin._id === nextProps.selectedBin._id) return;
 
     const { selectedBin: { name, selection } } = nextProps;
@@ -112,7 +111,7 @@ class SelectionContainer extends Component {
              alt="Save Bin"/>
       </div> :
       <div
-        className={`edit-bin-name clickable`}
+        className={`selection__header__bin-name clickable`}
         onClick={this.startEditingName.bind(this)}>
         <span>{selectedBinName}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff"
@@ -123,78 +122,82 @@ class SelectionContainer extends Component {
       </div>;
 
     return (
-      <main className="Selection-Container">
-        <div className="selection">
-          <div className="selection-header">
-            {binNameEditor}
+      <div className="selection">
+        <div className="selection__header">
+          {binNameEditor}
+          <img className="clickable"
+               src={images.play}
+               onClick={this.runCode.bind(this)}
+               title="Run Code (Ctrl+Enter)"
+               alt="Run Code"/>
+          {!isEditingName && <img className="clickable"
+                                  src={images.save}
+                                  onClick={this.saveBin.bind(this)}
+                                  title="Save (Ctrl+S)"
+                                  alt="Save"/>}
+          <img className="clickable"
+               onClick={this.importGist.bind(this)}
+               src={images.externalLink}
+               title="Quick URL import"
+               alt="Quick URL import"/>
+          <div onClick={(e) => this.shareCode(e)}>
+            <div className="popup">
+              Link copied!
+            </div>
             <img className="clickable"
-                 src={images.play}
-                 onClick={this.runCode.bind(this)}
-                 title="Run Code (Ctrl+Enter)"
-                 alt="Run Code"/>
-            {!isEditingName && <img className="clickable"
-                                    src={images.save}
-                                    onClick={this.saveBin.bind(this)}
-                                    title="Save (Ctrl+S)"
-                                    alt="Save"/>}
-            <div onClick={(e) => this.shareCode(e)}>
-              <div className="popup">
-                Link copied!
-              </div>
-              <img className="clickable"
-                   src={images.share}
-                   title="Share Code"
-                   alt="Share Code"/>
-            </div>
-            <div onClick={(e) => this.copyCode(e)}>
-              <div className="popup">
-                Code copied!
-              </div>
-              <img className="clickable"
-                   src={images.clipboard}
-                   title="Copy Code To Clipboard"
-                   alt="Copy Code To Clipboard"/>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                 stroke="white"
-                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                 className={`feather feather-folder-plus clickable ${librariesVisible ? 'active' : ''}`}
-                 onClick={this.showLibraries.bind(this)}>
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
-                <title>Toggle Libraries</title>
-              </path>
-              <line x1="12" y1="11" x2="12" y2="17"></line>
-              <line x1="9" y1="14" x2="15" y2="14"></line>
-            </svg>
+                 src={images.share}
+                 title="Share Code"
+                 alt="Share Code"/>
           </div>
-          <div className="selection-editor">
-            <AceEditor
-              style={{ height: '100%', width: '100%' }}
-              mode="javascript"
-              theme="tomorrow"
-              onChange={this.onSelectionChange.bind(this)}
-              fontSize={16}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
-              value={selection}
-              setOptions={{
-                showLineNumbers: true,
-                tabSize: 2
-              }}/>
+          <div onClick={(e) => this.copyCode(e)}>
+            <div className="popup">
+              Code copied!
+            </div>
+            <img className="clickable"
+                 src={images.clipboard}
+                 title="Copy Code To Clipboard"
+                 alt="Copy Code To Clipboard"/>
           </div>
+          {librariesVisible
+            ? <img className="clickable"
+                   onClick={this.toggleLibraries.bind(this)}
+                   src={images.folderMinus}
+                   title="Hide Libraries"
+                   alt="Hide Libraries"/>
+            : <img className="clickable"
+                   onClick={this.toggleLibraries.bind(this)}
+                   src={images.folderPlus}
+                   title="Show Libraries"
+                   alt="Show Libraries"/>}
         </div>
-      </main>
+        <div className="selection__editor">
+          <AceEditor
+            style={{ height: '100%', width: '100%' }}
+            mode="javascript"
+            theme="tomorrow"
+            onChange={this.onSelectionChange.bind(this)}
+            fontSize={16}
+            showPrintMargin={true}
+            showGutter={true}
+            highlightActiveLine={true}
+            value={selection}
+            setOptions={{
+              showLineNumbers: true,
+              tabSize: 2
+            }}/>
+        </div>
+      </div>
     );
   };
 
   saveBinNameClick() {
+    const { selection } = this.state;
     const { selectedBin: { _id } } = this.props;
 
     if (this.editingInput) {
       const { value } = this.editingInput;
       if (!_id) {
-        this.saveEmptyBin(value);
+        this.saveEmptyBin(value, selection);
       } else {
         this.editBinName(_id, value);
       }
@@ -209,9 +212,10 @@ class SelectionContainer extends Component {
     }
   }
 
-  saveEmptyBin(name) {
-    this.props.onAddAndSelectBin(name, this.state.selection)
+  saveEmptyBin(name, selection) {
+    this.props.onCreateBin(name, selection)
       .then(_id => {
+        console.log({ _id });
         this.props.history.push(`/${_id}`);
       });
   }
@@ -256,6 +260,15 @@ class SelectionContainer extends Component {
     }
   }
 
+  async importGist() {
+    const url = prompt('Data URL');
+
+    if (url) {
+      const { name, selection } = await importURLAsBin(url);
+      this.saveEmptyBin(name, selection);
+    }
+  }
+
   shareCode({ target }) {
     textToClipboard(window.location.href);
     showPopup(target.parentElement.querySelector('.popup'));
@@ -266,7 +279,7 @@ class SelectionContainer extends Component {
     showPopup(target.parentElement.querySelector('.popup'));
   }
 
-  showLibraries() {
+  toggleLibraries() {
     this.props.onToggleLibraryMenu(!this.props.librariesVisible);
   }
 }
@@ -295,7 +308,7 @@ const mapDispatchToProps = (dispatch) => ({
   onSelectBin: (bin) => dispatch(selectBin(bin)),
   onSelectBinById: (_id) => dispatch(selectBinByID(_id)),
   onEditBin: (_id, name) => dispatch(editBin(_id, name)),
-  onAddAndSelectBin: (name, selection) => dispatch(addAndSelectBin(name, selection)),
+  onCreateBin: (name, selection) => dispatch(createBin(name, selection)),
   onSaveBin: (_id, selection) => dispatch(saveBin(_id, selection)),
   onAddLog: (message, logType) => dispatch(addLog(message, logType)),
   onToggleLibraryMenu: (toggle) => dispatch(toggleLibraryMenu(toggle))

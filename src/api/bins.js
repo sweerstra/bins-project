@@ -1,5 +1,5 @@
 import Request from '../api/Request';
-import { BINS_API } from '../constants/Keys';
+import { BINS_API } from '../constants';
 
 const getBin = (_id) => {
   return Request.get(`${BINS_API}/bin/${_id}`);

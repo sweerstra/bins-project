@@ -9,14 +9,13 @@
 @media (max-width: 800px) {
   .App {
     grid-template-areas: "header header" "bins bins" "selection selection" "console libraries";
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 80px 1fr 1fr 1fr;
     height: calc(300% + 80px);
   }
 
   .bins,
-  .selection-header,
-  .selection-editor {
+  .selection {
     border-right: none;
   }
 }
@@ -25,7 +24,7 @@ header { grid-area: header; }
 
 .bins { grid-area: bins; }
 
-.Selection-Container { grid-area: selection; }
+.selection { grid-area: selection; }
 
 .console { grid-area: console; }
 
@@ -37,10 +36,11 @@ header { grid-area: header; }
 }
 
 .clickable:hover {
-  color: var(--main-red);
+  /*color: var(--main-red);*/
 }
 
 .feather:hover {
+  stroke: var(--main-red);
   cursor: pointer;
 }
 

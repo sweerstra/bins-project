@@ -1,5 +1,5 @@
 import Request from '../api/Request';
-import { LIBRARIES_API } from '../constants/Keys';
+import { LIBRARIES_API } from '../constants';
 
 const getLibraries = () => {
   return Request.get(LIBRARIES_API);
