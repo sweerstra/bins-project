@@ -2,39 +2,43 @@
   height: 100vh;
   display: grid;
   grid-template-areas: "header header header header" "bins selection console libraries";
-  grid-template-columns: 1fr 2.5fr 0.75fr 0.75fr;
+  grid-template-columns: 0.75fr 2fr 0.75fr auto;
   grid-template-rows: 80px 1fr;
+}
+
+@media (max-width: 800px) {
+  .App {
+    grid-template-areas: "header header" "bins bins" "selection selection" "console libraries";
+    grid-template-columns: auto auto;
+    grid-template-rows: 80px 1fr 1fr 1fr;
+    height: calc(300% + 80px);
+  }
+
+  .bins,
+  .selection-header,
+  .selection-editor {
+    border-right: none;
+  }
 }
 
 header { grid-area: header; }
 
-aside.bins { grid-area: bins; }
+.bins { grid-area: bins; }
 
-main { grid-area: selection; }
+.selection { grid-area: selection; }
 
 .console { grid-area: console; }
 
 .libraries { grid-area: libraries; }
-
-::-webkit-input-placeholder { color: white; }
 
 .clickable {
   cursor: pointer;
   font-weight: bold;
 }
 
-.clickable:hover { color: var(--main-red); }
-
-.textbox {
+.clickable:hover {
   color: var(--main-red);
-  background-color: var(--main-dark);
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  caret-color: var(--main-red);
 }
-
-.textbox:focus { outline: none; }
 
 .feather:hover {
   cursor: pointer;
