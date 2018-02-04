@@ -1,40 +1,21 @@
-.Libraries-Container {
-  width: 256px;
-  height: 20em;
-  font-size: 18px;
-}
-
-.libraries-placeholder {
-  width: 225px;
-  padding: 8px 16px;
-  font-weight: bold;
-  color: white;
-  border-top: 3px solid var(--main-red);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.Libraries-Container,
-.libraries-placeholder {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+.library-container {
   background-color: var(--main-dark);
+  border-left: 3px solid var(--main-red);
 }
 
-.libraries-header {
-  padding: 8px 16px;
+.libraries__header {
+  padding: 10px 16px;
   font-weight: bold;
   color: white;
-  border-top: 3px solid var(--main-red);
   border-bottom: 3px solid var(--main-red);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.libraries { padding: 8px 16px }
+.libraries__selected {
+  padding: 8px 16px;
+}
 
 .library {
   margin-bottom: 8px;
@@ -48,32 +29,24 @@
   font-weight: bold;
 }
 
-.add-library {
+.libraries__add {
   padding: 8px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.add-library input[type=text] {
-  width: 160px;
-  margin-right: 8px;
+.libraries__add input[type=text] {
+  width: 80%;
   padding: 4px 0;
-  color: var(--main-red);
-  background-color: var(--main-dark);
-  border: none;
 }
 
-.add-library-icons .clickable:nth-child(2) { margin-left: 6px; }
-
-.autocomplete-suggestions {
-  width: 240px;
-  position: absolute;
-  left: 16px;
+.libraries__autocompleted-suggestions {
+  padding: 0 16px;
   background-color: var(--main-dark);
 }
 
-.autocomplete-suggestions p {
+.libraries__autocompleted-suggestions p {
   margin: 8px 0;
   color: white;
   font-weight: bold;

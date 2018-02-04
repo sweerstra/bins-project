@@ -26,24 +26,27 @@ class BinList extends Component {
     );
   }
 
-  handleSearchChange = (e) => {
-    this.setState({ search: e.target.value });
+  handleSearchChange = ({ target }) => {
+    this.setState({ search: target.value });
   };
 
   removeBin = (e, _id) => {
     e.stopPropagation();
 
-    const { selectedBin, onRemoveBin, onSelectBin } = this.props;
-    onRemoveBin(_id);
+    const { selectedBin, onRemoveBin } = this.props;
 
     if (_id === selectedBin._id) {
-      onSelectBin({ _id: '', name: '', selection: '' });
+      console.log('about to remove selected bin');
+
+      // onSelectBin({ _id: '', name: '', selection: '' });
     }
+
+    onRemoveBin(_id);
   };
 }
 
 BinList.propTypes = {
-  fetching: PropTypes.bool,
+  isFetching: PropTypes.bool,
   bins: PropTypes.array,
   selectedBin: PropTypes.shape({
     _id: PropTypes.string,

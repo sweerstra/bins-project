@@ -8,6 +8,12 @@ class Libraries extends Component {
     this.state = { filteredLibraries: [] };
   }
 
+  componentDidUpdate() {
+    if (this.input) {
+      this.input.focus();
+    }
+  }
+
   componentWillReceiveProps({ defaultLibraries }) {
     if (defaultLibraries.length > this.props.defaultLibraries.length) {
       this.setState({ filteredLibraries: defaultLibraries });
@@ -18,28 +24,16 @@ class Libraries extends Component {
     const { filteredLibraries } = this.state;
     const { selectedLibraries, librariesVisible, onAddSelectedLibrary, onRemoveSelectedLibrary, onShowLibraryMenu, onHideLibraryMenu } = this.props;
 
-    if (librariesVisible === false) {
-      return (
-        <div className="libraries-placeholder">
-          Libraries
-          <img src={images.plusCircleSmall}
-               className="clickable"
-               onClick={onShowLibraryMenu}
-               alt="Show Libraries"/>
-        </div>
-      );
-    }
-
     return (
-      <div className="Libraries-Container">
-        <div className="libraries-header">
+      <div className="library-container">
+        <div className="libraries__header">
           Libraries
           <img src={images.minusCircle}
                className="clickable"
                onClick={onHideLibraryMenu}
                alt="Hide Libraries"/>
         </div>
-        <form className="add-library"
+        <form className="libraries__add"
               onSubmit={(e) => {
                 e.preventDefault();
                 onAddSelectedLibrary(this.input.value);
@@ -51,29 +45,23 @@ class Libraries extends Component {
                  spellCheck="false"
                  onChange={this.onAddLibraryInputChange.bind(this)}
                  ref={input => this.input = input}/>
-          {filteredLibraries.length === 0 && <div className="icon-buttons">
-            <input type="image"
-                   className="clickable"
-                   src={images.plusCircleSmall}
-                   alt="Add Library"/>
-            <img src={images.list}
+          <input type="image"
                  className="clickable"
-                 onClick={this.showDefaultLibraries.bind(this)}
-                 alt="Show Default Libraries"/>
-          </div>}
+                 src={images.plusCircleSmall}
+                 alt="Add Library"/>
         </form>
-        <div className="autocomplete-suggestions">
+        <div className="libraries__autocompleted-suggestions">
           {filteredLibraries.map((suggestion, index) =>
             <p onClick={() => this.selectDefaultLibrary(suggestion)} key={index}>
               {suggestion.name}
             </p>
           )}
         </div>
-        <div className="libraries">
+        <div className="libraries__selected">
           {selectedLibraries.map(({ name, url }, index) =>
             <div className="library" key={index}>
               <a href={url} target="about_blank">{name}</a>
-              <img src={images.x}
+              <img src={images.xCircle}
                    className="clickable"
                    onClick={() => onRemoveSelectedLibrary(url, index)}
                    alt="Remove Library"/>
@@ -82,10 +70,6 @@ class Libraries extends Component {
         </div>
       </div>
     );
-  }
-
-  showDefaultLibraries() {
-    this.setState({ filteredLibraries: this.props.libraries });
   }
 
   onAddLibraryInputChange(e) {

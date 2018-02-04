@@ -56,7 +56,7 @@ export const saveBin = (_id, selection) => dispatch => {
 export const addAndSelectBin = (name, selection) => dispatch => {
   BinsApi.addBin({ name, selection }).then(({ insertedId: _id }) => {
     dispatch(addBin(_id, name, selection));
-    dispatch(selectBin({ _id, name, selection }));
+    dispatch(selectBinByID(_id));
   });
 };
 

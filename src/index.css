@@ -1,10 +1,26 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+@import "./assets/controls.css";
+
 :root {
   --main-red: #F65554;
   --main-dark: #262A34;
 }
 
+html {
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  font-family: inherit;
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
 }
+
+

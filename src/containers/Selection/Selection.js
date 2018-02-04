@@ -4,26 +4,25 @@ import { connect } from 'react-redux';
 import {
   addAndSelectBin,
   addLog,
-  clearConsole,
   editBin,
   fetchSingleBin,
   saveBin,
   selectBin,
-  selectBinByID
+  selectBinByID,
+  toggleLibraryMenu
 } from '../../actions/index';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
 import images from '../../assets/images';
+import textToClipboard from '../../utils/text-to-clipboard';
 import './Selection.css';
-import ConsoleLog from '../../components/ConsoleLog/ConsoleLog';
-import LibraryList from '../LibraryList';
 
 class SelectionContainer extends Component {
   constructor() {
     super();
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.state = { selection: '', editing: false };
+    this.state = { selection: '', isEditingName: false };
   }
 
   static formatLog(log) {
@@ -46,21 +45,22 @@ class SelectionContainer extends Component {
     };
 
     const { binId } = this.props.match.params;
-    console.log(binId, 'in mount');
     if (binId) {
+      console.log('mounting single fetch');
       this.props.onFetchSingleBin(binId);
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.match.params.binId === this.props.match.params.binId) return;
-
     const { binId } = this.props.match.params;
 
-    if (binId) {
-      this.props.onSelectBinById(binId);
-    } else {
-      this.props.onSelectBin({ _id: '', name: '', selection: '' });
+    if (prevProps.match.params.binId !== binId) {
+      if (binId) {
+        this.props.onSelectBinById(binId);
+      } else {
+        console.log('from selection: select empty bin');
+        this.props.onSelectBin({ _id: '', name: '', selection: '' });
+      }
     }
 
     if (this.editingInput) {
@@ -73,8 +73,9 @@ class SelectionContainer extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.selectedBin._id === nextProps.selectedBin._id) return;
 
-    const { selectedBin: { selection } } = nextProps;
+    const { selectedBin: { name, selection } } = nextProps;
     this.setState({ selection });
+    document.title = name;
   }
 
   onKeyDown(e) {
@@ -88,12 +89,12 @@ class SelectionContainer extends Component {
   }
 
   render() {
-    const { selection, editing } = this.state;
-    const { selectedBin: { _id, name }, logs } = this.props;
+    const { selection, isEditingName } = this.state;
+    const { selectedBin: { _id, name }, librariesVisible } = this.props;
     const selectedBinName = _id ? name : 'Empty bin';
 
-    const binNameEditor = editing
-      ? <div className="add-bin">
+    const binNameEditor = isEditingName ?
+      <div className="add-bin">
         <input
           className="textbox"
           type="text"
@@ -107,10 +108,10 @@ class SelectionContainer extends Component {
              src={images.save}
              onClick={this.saveBinNameClick.bind(this)}
              alt="Save Bin"/>
-      </div>
-      : <div
+      </div> :
+      <div
         className={`edit-bin-name clickable`}
-        onClick={this.edit.bind(this)}>
+        onClick={this.startEditingName.bind(this)}>
         <span>{selectedBinName}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff"
              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit">
@@ -124,30 +125,51 @@ class SelectionContainer extends Component {
         <div className="selection">
           <div className="selection-header">
             {binNameEditor}
-            <div className="icon-buttons" style={{ width: '120px' }}>
-              <img className="clickable"
-                   src={images.play}
-                   onClick={this.runCode.bind(this)}
-                   title="Run Code (Ctrl+Enter)"
-                   alt="Run Code"/>
-              {!editing && <img className="clickable"
-                                src={images.save}
-                                onClick={this.saveBin.bind(this)}
-                                title="Save (Ctrl+S)"
-                                alt="Save"/>}
+            <img className="clickable"
+                 src={images.play}
+                 onClick={this.runCode.bind(this)}
+                 title="Run Code (Ctrl+Enter)"
+                 alt="Run Code"/>
+            {!isEditingName && <img className="clickable"
+                                    src={images.save}
+                                    onClick={this.saveBin.bind(this)}
+                                    title="Save (Ctrl+S)"
+                                    alt="Save"/>}
+            <div onClick={(e) => this.shareCode(e)}>
+              <div className="popup">
+                Link copied!
+              </div>
               <img className="clickable"
                    src={images.share}
-                   onClick={this.shareCode.bind(this)}
                    title="Share Code"
                    alt="Share Code"/>
             </div>
+            <div onClick={(e) => this.copyCode(e)}>
+              <div className="popup">
+                Code copied!
+              </div>
+              <img className="clickable"
+                   src={images.clipboard}
+                   title="Copy Code To Clipboard"
+                   alt="Copy Code To Clipboard"/>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="white"
+                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                 className={`feather feather-folder-plus clickable ${librariesVisible ? 'active' : ''}`}
+                 onClick={this.showLibraries.bind(this)}
+                 title="Toggle Libraries">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              <line x1="12" y1="11" x2="12" y2="17"></line>
+              <line x1="9" y1="14" x2="15" y2="14"></line>
+            </svg>
           </div>
           <div className="selection-editor">
             <AceEditor
               style={{ height: '100%', width: '100%' }}
               mode="javascript"
               theme="tomorrow"
-              onChange={this.onChange.bind(this)}
+              onChange={this.onSelectionChange.bind(this)}
               fontSize={16}
               showPrintMargin={true}
               showGutter={true}
@@ -159,10 +181,6 @@ class SelectionContainer extends Component {
               }}/>
           </div>
         </div>
-        <ConsoleLog
-          logs={logs}
-          onClearConsole={this.props.onClearConsole}/>
-        <LibraryList/>
       </main>
     );
   };
@@ -179,7 +197,7 @@ class SelectionContainer extends Component {
       }
     }
 
-    this.setState({ editing: false });
+    this.setState({ isEditingName: false });
   }
 
   onBinNameKeyDown(event) {
@@ -198,13 +216,22 @@ class SelectionContainer extends Component {
     onSelectBinById(_id);
   }
 
+  startEditingName() {
+    this.setState({ isEditingName: true });
+  }
+
+  onSelectionChange(selection) {
+    this.setState({ selection });
+  }
+
+  /* Icon events */
   runCode() {
     const { selection } = this.state;
-    if (!selection) return;
+    if (selection.trim() === '') return;
     const { onAddLog } = this.props;
 
     try {
-      eval(`(function() { ${selection} })()`);
+      eval(selection);
     } catch (e) {
       console.error(e.message);
       onAddLog(e.message, 'error');
@@ -212,46 +239,49 @@ class SelectionContainer extends Component {
     onAddLog(null, 'break');
   }
 
-  onChange(selection) {
-    this.setState({ selection });
-  }
-
-  edit() {
-    this.setState(state => ({ ...state, editing: true }));
-  }
-
   saveBin() {
     const { selection } = this.state;
     const { selectedBin: { _id }, onSaveBin } = this.props;
 
     if (!_id) {
-      this.edit();
+      this.startEditingName();
     } else {
       onSaveBin(_id, selection);
     }
   }
 
-  shareCode() {
-    console.log(this.state.selection);
+  shareCode({ target }) {
+    textToClipboard(window.location.href);
+    showPopup(target.parentElement.querySelector('.popup'));
+  }
+
+  copyCode({ target }) {
+    textToClipboard(this.state.selection);
+    showPopup(target.parentElement.querySelector('.popup'));
+  }
+
+  showLibraries() {
+    this.props.onToggleLibraryMenu(!this.props.librariesVisible);
   }
 }
+
+const showPopup = (popup) => {
+  popup.classList.add('show');
+  setTimeout(() => {
+    popup.classList.remove('show');
+  }, 2000);
+};
 
 SelectionContainer.propTypes = {
   selectedBin: PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     selection: PropTypes.string
-  }),
-  logs: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.string,
-      logType: PropTypes.string
-    })
-  )
+  })
 };
 
-const mapStateToProps = ({ bins: { selectedBin }, logs }) => {
-  return ({ selectedBin, logs });
+const mapStateToProps = ({ bins: { selectedBin }, libraries: { librariesVisible } }) => {
+  return ({ selectedBin, librariesVisible });
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -262,7 +292,7 @@ const mapDispatchToProps = (dispatch) => ({
   onAddAndSelectBin: (name, selection) => dispatch(addAndSelectBin(name, selection)),
   onSaveBin: (_id, selection) => dispatch(saveBin(_id, selection)),
   onAddLog: (message, logType) => dispatch(addLog(message, logType)),
-  onClearConsole: () => dispatch(clearConsole())
+  onToggleLibraryMenu: (toggle) => dispatch(toggleLibraryMenu(toggle))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectionContainer);

@@ -14,16 +14,10 @@ class LibraryList extends Component {
     this.props.onFetchDefaultLibraries();
   }
 
-  componentDidUpdate() {
-    if (this.input) {
-      this.input.focus();
-    }
-  }
-
   render() {
     const { librariesVisible, onShowLibraryMenu, onHideLibraryMenu, defaultLibraries } = this.props;
 
-    return <Libraries
+    return librariesVisible && <Libraries
       selectedLibraries={this.state.libraries}
       defaultLibraries={defaultLibraries}
       librariesVisible={librariesVisible}

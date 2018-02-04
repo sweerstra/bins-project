@@ -26,18 +26,18 @@ const updateBinProperty = (state, action, prop) => {
   };
 };
 
-const bins = (state = { bins: [], selectedBin: { _id: '', name: '', selection: '' }, fetching: false }, action) => {
+const bins = (state = { bins: [], selectedBin: { _id: '', name: '', selection: '' }, isFetching: false }, action) => {
   switch (action.type) {
     case REQUEST_BINS:
       return {
         ...state,
-        fetching: true
+        isFetching: true
       };
     case RECEIVE_BINS:
       return {
         ...state,
         bins: action.bins,
-        fetching: false
+        isFetching: false
       };
     case SELECT_BIN:
       return {
@@ -59,6 +59,8 @@ const bins = (state = { bins: [], selectedBin: { _id: '', name: '', selection: '
     case REMOVE_BIN:
       const index = state.bins.findIndex(bin => bin._id === action._id);
       if (index === -1) return state;
+
+      console.log({ index });
 
       return {
         ...state,
