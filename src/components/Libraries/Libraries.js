@@ -22,7 +22,7 @@ class Libraries extends Component {
 
   render() {
     const { filteredLibraries } = this.state;
-    const { selectedLibraries, librariesVisible, onAddSelectedLibrary, onRemoveSelectedLibrary, onShowLibraryMenu, onHideLibraryMenu } = this.props;
+    const { selectedLibraries, onAddSelectedLibrary, onRemoveSelectedLibrary, onHideLibraryMenu } = this.props;
 
     return (
       <div className="library-container">

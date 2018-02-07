@@ -2,8 +2,11 @@
 @import "./assets/controls.css";
 
 :root {
+  --primary-color: #38529F;
+  --secondary-color: #262A34;
   --main-red: #F65554;
-  --main-dark: #262A34;
+  --main-red-dark: #DD3C3B;
+  --placeholder-light: #8C909A;
 }
 
 html {

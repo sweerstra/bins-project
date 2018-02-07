@@ -1,13 +1,13 @@
 .library-container {
-  background-color: var(--main-dark);
-  border-left: 3px solid var(--main-red);
+  background-color: var(--secondary-color);
+  border-left: 3px solid var(--primary-color);
 }
 
 .libraries__header {
   padding: 10px 16px;
   font-weight: bold;
   color: white;
-  border-bottom: 3px solid var(--main-red);
+  border-bottom: 3px solid var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -25,7 +25,7 @@
 }
 
 .library a {
-  color: var(--main-red);
+  color: var(--primary-color);
   font-weight: bold;
 }
 
@@ -43,7 +43,7 @@
 
 .libraries__autocompleted-suggestions {
   padding: 0 16px;
-  background-color: var(--main-dark);
+  background-color: var(--secondary-color);
 }
 
 .libraries__autocompleted-suggestions p {

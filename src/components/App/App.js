@@ -1,19 +1,17 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import NavigationBar from '../NavigationBar/NavigationBar';
-import BinList from '../../containers/BinList';
-import SelectionContainer from '../../containers/Selection/Selection';
-import ConsoleLog from '../../containers/ConsoleLog';
-import LibraryList from '../../containers/LibraryList';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import Editor from '../../pages/editor';
+import Passphrase from '../../pages/passphrase';
+// import PermissionApi from '../../api/permission';
 import './App.css';
 
 const App = () => (
   <div className="App">
-    <NavigationBar/>
-    <Route path="/" component={BinList}/>
-    <Route path="/:binId?" component={SelectionContainer}/>
-    <ConsoleLog/>
-    <LibraryList/>
+    <Switch>
+      <Route path="/bin" component={Editor}/>
+      <Route exact path="/passphrase" component={Passphrase}/>
+      <Redirect to="/"/>
+    </Switch>
   </div>
 );
 

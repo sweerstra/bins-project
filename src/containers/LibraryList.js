@@ -36,7 +36,7 @@ class LibraryList extends Component {
     appendScriptToDOM(url);
 
     // if not in default library list -> add with API call
-    if (!isDefaultLibrary) {
+    if (!isDefaultLibrary && !this.props.readOnly) {
       this.props.onAddDefaultLibraryIfNew(library);
     }
   }
@@ -69,8 +69,8 @@ LibraryList.propTypes = {
   defaultLibraries: PropTypes.array
 };
 
-const mapStateToProps = ({ libraries }) => {
-  return { ...libraries };
+const mapStateToProps = ({ libraries, permission: { hasPermission } }) => {
+  return { ...libraries, readOnly: !hasPermission };
 };
 
 const mapDispatchToProps = (dispatch) => ({

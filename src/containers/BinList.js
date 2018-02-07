@@ -36,7 +36,7 @@ class BinList extends Component {
     this.props.onRemoveBin(_id);
 
     if (isSelected) {
-      this.props.history.push('/');
+      this.props.history.push('/bin');
     }
   };
 }
@@ -51,8 +51,8 @@ BinList.propTypes = {
   })
 };
 
-const mapStateToProps = ({ bins }) => {
-  return { ...bins };
+const mapStateToProps = ({ bins, permission: { hasPermission } }) => {
+  return { ...bins, readOnly: !hasPermission };
 };
 
 const mapDispatchToProps = (dispatch) => ({

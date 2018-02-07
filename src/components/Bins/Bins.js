@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import images from '../../assets/images';
 import './Bins.css';
 
-const Bins = ({ bins, isFetching, selectedBin, onSelectBin, onRemoveBin, onSearchBin }) => (
+const Bins = ({ bins, isFetching, selectedBin, readOnly, onSelectBin, onRemoveBin, onSearchBin }) => (
   <aside className="bins">
     <div className="bins__search">
       <input type="text"
@@ -15,14 +15,14 @@ const Bins = ({ bins, isFetching, selectedBin, onSelectBin, onRemoveBin, onSearc
     <div className="bins__container">
       {isFetching && <div className="bins__loading">Loading...</div>}
       {bins.map(({ name, _id }, index) =>
-        <Link to={`/${_id}`}
+        <Link to={`/bin/${_id}`}
               className={_id === selectedBin._id ? 'bin active' : 'bin'}
               key={index}>
           {name}
-          <div className="bin__remove"
-               onClick={(e) => onRemoveBin(e, _id, _id === selectedBin._id)}>
+          {!readOnly && <div className="bin__remove"
+                             onClick={(e) => onRemoveBin(e, _id, _id === selectedBin._id)}>
             <img src={images.xCircle} alt="Remove Bin"/>
-          </div>
+          </div>}
         </Link>
       )}
     </div>

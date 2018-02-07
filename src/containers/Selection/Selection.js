@@ -40,6 +40,7 @@ class SelectionContainer extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown);
 
+
     window.log = (...messages) => {
       this.props.onAddLog(`>> ${messages.map(SelectionContainer.formatLog).join(' ')}`, 'code');
       console.log(...messages);
@@ -47,7 +48,6 @@ class SelectionContainer extends Component {
 
     const { binId } = this.props.match.params;
     if (binId) {
-      console.log('mounting single fetch');
       this.props.onFetchSingleBin(binId);
     }
   }
@@ -59,7 +59,6 @@ class SelectionContainer extends Component {
       if (binId) {
         this.props.onSelectBinById(binId);
       } else {
-        console.log('from selection: select empty bin');
         this.props.onSelectBin({ _id: '', name: '', selection: '' });
       }
     }
@@ -81,6 +80,7 @@ class SelectionContainer extends Component {
 
   onKeyDown(e) {
     if (e.ctrlKey && e.keyCode === 83) {
+      if (this.props.readOnly) return;
       this.saveBin();
       e.preventDefault();
     } else if (e.ctrlKey && e.keyCode === 13) {
@@ -91,35 +91,39 @@ class SelectionContainer extends Component {
 
   render() {
     const { selection, isEditingName } = this.state;
-    const { selectedBin: { _id, name }, librariesVisible } = this.props;
+    const { selectedBin: { _id, name }, librariesVisible, readOnly } = this.props;
     const selectedBinName = _id ? name : 'Empty bin';
 
-    const binNameEditor = isEditingName ?
-      <div className="add-bin">
-        <input
-          className="textbox"
-          type="text"
-          placeholder="Type bin name here..."
-          spellCheck="false"
-          onKeyDown={(e) => this.onBinNameKeyDown(e)}
-          ref={(textbox) => {
-            this.editingInput = textbox;
-          }}/>
-        <img className="clickable"
-             src={images.save}
-             onClick={this.saveBinNameClick.bind(this)}
-             alt="Save Bin"/>
-      </div> :
-      <div
-        className={`selection__header__bin-name clickable`}
-        onClick={this.startEditingName.bind(this)}>
+    const binNameEditor = readOnly ?
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <span>{selectedBinName}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff"
-             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit">
-          <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
-          <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
-        </svg>
-      </div>;
+      </div> :
+      isEditingName ?
+        <div className="add-bin">
+          <input
+            className="textbox"
+            type="text"
+            placeholder="Type bin name here..."
+            spellCheck="false"
+            onKeyDown={(e) => this.onBinNameKeyDown(e)}
+            ref={(textbox) => {
+              this.editingInput = textbox;
+            }}/>
+          <img className="clickable"
+               src={images.save}
+               onClick={this.saveBinNameClick.bind(this)}
+               alt="Save Bin"/>
+        </div> :
+        <div
+          className={`selection__header__bin-name clickable`}
+          onClick={this.startEditingName.bind(this)}>
+          <span>{selectedBinName}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff"
+               strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit">
+            <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+            <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+          </svg>
+        </div>;
 
     return (
       <div className="selection">
@@ -130,24 +134,24 @@ class SelectionContainer extends Component {
                onClick={this.runCode.bind(this)}
                title="Run Code (Ctrl+Enter)"
                alt="Run Code"/>
-          {!isEditingName && <img className="clickable"
-                                  src={images.save}
-                                  onClick={this.saveBin.bind(this)}
-                                  title="Save (Ctrl+S)"
-                                  alt="Save"/>}
-          <img className="clickable"
-               onClick={this.importGist.bind(this)}
-               src={images.externalLink}
-               title="Quick URL import"
-               alt="Quick URL import"/>
+          {!isEditingName && !readOnly && <img className="clickable"
+                                               src={images.save}
+                                               onClick={this.saveBin.bind(this)}
+                                               title="Save (Ctrl+S)"
+                                               alt="Save"/>}
+          {!readOnly && <img className="clickable"
+                             onClick={this.importGist.bind(this)}
+                             src={images.externalLink}
+                             title="Quick URL import"
+                             alt="Quick URL import"/>}
           <div onClick={(e) => this.shareCode(e)}>
             <div className="popup">
               Link copied!
             </div>
             <img className="clickable"
                  src={images.share}
-                 title="Share Code"
-                 alt="Share Code"/>
+                 title="Share Bin URL"
+                 alt="Share Bin URL"/>
           </div>
           <div onClick={(e) => this.copyCode(e)}>
             <div className="popup">
@@ -155,8 +159,8 @@ class SelectionContainer extends Component {
             </div>
             <img className="clickable"
                  src={images.clipboard}
-                 title="Copy Code To Clipboard"
-                 alt="Copy Code To Clipboard"/>
+                 title="Code To Clipboard"
+                 alt="Code To Clipboard"/>
           </div>
           {librariesVisible
             ? <img className="clickable"
@@ -215,8 +219,7 @@ class SelectionContainer extends Component {
   saveEmptyBin(name, selection) {
     this.props.onCreateBin(name, selection)
       .then(_id => {
-        console.log({ _id });
-        this.props.history.push(`/${_id}`);
+        this.props.history.push(`/bin/${_id}`);
       });
   }
 
@@ -299,8 +302,8 @@ SelectionContainer.propTypes = {
   })
 };
 
-const mapStateToProps = ({ bins: { selectedBin }, libraries: { librariesVisible } }) => {
-  return ({ selectedBin, librariesVisible });
+const mapStateToProps = ({ bins: { selectedBin }, libraries: { librariesVisible }, permission: { hasPermission } }) => {
+  return ({ selectedBin, librariesVisible, readOnly: !hasPermission });
 };
 
 const mapDispatchToProps = (dispatch) => ({

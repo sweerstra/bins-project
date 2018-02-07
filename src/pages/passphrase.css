@@ -1,0 +1,106 @@
+.passphrase {
+  min-height: 100vh;
+  color: white;
+  background-color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.passphrase__content input[type=text] {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
+  font-size: 24px;
+  border: none;
+  border-bottom: 2px solid var(--primary-color);
+  caret-color: var(--primary-color);
+}
+
+.passphrase__content h1 {
+  font-size: 42px;
+  line-height: 48px;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.passphrase__content img {
+  margin-left: 16px;
+}
+
+.passphrase__content label {
+  font-size: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.passphrase__content input[type=text]:focus {
+  outline: none;
+}
+
+.passphrase__content input[type=text]::-webkit-input-placeholder {
+  color: var(--placeholder-light);
+  font-weight: normal;
+}
+
+.passphrase__content input[type=text].rejected {
+  border-color: var(--main-red);
+}
+
+.passphrase__content .rejected {
+  color: var(--main-red) !important;
+  caret-color: var(--main-red) !important;
+}
+
+.passphrase__content p.rejected {
+  margin-bottom: 0;
+}
+
+.passphrase__content .rejected-span {
+  color: var(--main-red) !important;
+  font-size: 18px;
+}
+
+.passphrase__content button {
+  width: 100%;
+  margin: 16px 0 32px 0;
+  padding: 8px;
+  font-size: 22px;
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.passphrase__content button:hover:not(:disabled) {
+  transition: all .25s cubic-bezier(.645, .045, .355, 1);
+  color: white;
+  background-color: var(--primary-color);
+}
+
+.passphrase__content button:disabled {
+  color: var(--placeholder-light);
+  border-color: var(--placeholder-light);
+}
+
+.passphrase__content button:disabled:hover {
+  cursor: default;
+}
+
+.passphrase__content button:focus {
+  outline: none;
+}
+
+.passphrase__content a {
+  color: white;
+  font-size: 18px;
+}

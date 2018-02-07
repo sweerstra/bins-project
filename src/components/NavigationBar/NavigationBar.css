@@ -1,5 +1,5 @@
 .Navigation-Container {
-  background-color: var(--main-dark);
+  background-color: var(--secondary-color);
   padding: 16px;
   color: white;
   display: flex;
@@ -12,6 +12,12 @@
   text-decoration: none;
   font-weight: bold;
   font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.Navigation-Container-title img {
+  margin-left: 16px;
 }
 
 .add-bin {

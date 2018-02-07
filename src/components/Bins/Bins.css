@@ -1,11 +1,11 @@
 .bins {
-  border-right: 3px solid var(--main-red);
+  border-right: 3px solid var(--primary-color);
 }
 
 .bins__search {
   padding: 10px 16px;
-  background-color: var(--main-dark);
-  border-bottom: 3px solid var(--main-red);
+  background-color: var(--secondary-color);
+  border-bottom: 3px solid var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -25,7 +25,7 @@
 
 .bin {
   padding: 16px;
-  color: var(--main-dark);
+  color: var(--secondary-color);
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
@@ -37,7 +37,7 @@
 .bin:hover,
 .bin.active {
   color: white;
-  background-color: var(--main-red);
+  background-color: var(--primary-color);
 }
 
 .bin__remove {

@@ -1,6 +1,7 @@
 import BinsApi from '../api/bins';
 import LibrariesApi from '../api/libraries';
 import DataApi from '../api/data';
+import PermissionApi from '../api/permission';
 import * as types from '../constants/ActionTypes';
 
 export const requestBins = () => ({
@@ -104,4 +105,20 @@ export const toggleLibraryMenu = librariesVisible => ({
 
 export const importURLAsBin = url => {
   return DataApi.getCode(url);
+};
+
+export const authenticate = passphrase => dispatch => {
+  // dispatch({ type: types.CONFIRM_PERMISSION });
+
+  // localStorage.setItem('phrase', 'phrasje');
+
+  return Promise.resolve({ isAuthenticated: false });
+
+  return PermissionApi.getPermission(passphrase)
+    .then(({ isAuthenticated, phrase }) => {
+      if (isAuthenticated) {
+        dispatch({ type: types.CONFIRM_PERMISSION });
+        return isAuthenticated;
+      }
+    });
 };

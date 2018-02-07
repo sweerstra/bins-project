@@ -1,0 +1,31 @@
+.editor {
+  height: 100vh;
+  display: grid;
+  grid-template-areas: "header header header header" "bins selection console libraries";
+  grid-template-columns: 0.75fr 2fr 0.75fr auto;
+  grid-template-rows: 80px 1fr;
+}
+
+@media (max-width: 800px) {
+  .editor {
+    grid-template-areas: "header header" "bins bins" "selection selection" "console libraries";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 80px 1fr 1fr 1fr;
+    height: calc(300% + 80px);
+  }
+
+  .bins,
+  .selection {
+    border-right: none;
+  }
+}
+
+header { grid-area: header; }
+
+.bins { grid-area: bins; }
+
+.selection { grid-area: selection; }
+
+.console { grid-area: console; }
+
+.libraries { grid-area: libraries; }
