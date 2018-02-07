@@ -1,5 +1,5 @@
 .selection {
-  border-right: 3px solid var(--primary-color);
+  border-right: 3px solid var(--secondary-color);
   display: grid;
   grid-template-rows: auto 1fr;
 }
@@ -8,8 +8,8 @@
   padding: 8px 16px;
   font-weight: bold;
   color: white;
-  background-color: var(--secondary-color);
-  border-bottom: 3px solid var(--primary-color);
+  background-color: var(--primary-color);
+  border-bottom: 3px solid var(--secondary-color);
   display: grid;
   grid-gap: 20px;
   grid-template-columns: 1fr;
@@ -23,7 +23,7 @@
 
 .selection__header__bin-name span ~ svg { margin-left: 10px; }
 
-.selection__header__bin-name:hover span { color: var(--primary-color); }
+.selection__header__bin-name:hover span { color: var(--secondary-color); }
 
-.selection__header__bin-name:hover svg.feather-edit { stroke: var(--primary-color); }
+.selection__header__bin-name:hover svg.feather-edit { stroke: var(--secondary-color); }
 

@@ -2,8 +2,8 @@
 @import "./assets/controls.css";
 
 :root {
-  --primary-color: #38529F;
-  --secondary-color: #262A34;
+  --primary-color: #262A34;
+  --secondary-color: #38529F;
   --main-red: #F65554;
   --main-red-dark: #DD3C3B;
   --placeholder-light: #8C909A;

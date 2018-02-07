@@ -1,5 +1,5 @@
-.Navigation-Container {
-  background-color: var(--secondary-color);
+.navigation-bar {
+  background-color: var(--primary-color);
   padding: 16px;
   color: white;
   display: flex;
@@ -7,7 +7,7 @@
   justify-content: space-between;
 }
 
-.Navigation-Container-title {
+.navigation-bar__title {
   color: white;
   text-decoration: none;
   font-weight: bold;
@@ -16,15 +16,11 @@
   align-items: center;
 }
 
-.Navigation-Container-title img {
+.navigation-bar__title img {
   margin-left: 16px;
 }
 
-.add-bin {
-  display: flex;
-  align-items: center;
-}
-
-.add-bin .clickable {
-  margin-left: 8px;
+.navigation-bar__colors a {
+  margin-left: 4px;
+  color: white;
 }

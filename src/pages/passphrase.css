@@ -1,7 +1,7 @@
 .passphrase {
   min-height: 100vh;
   color: white;
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,12 +11,12 @@
   width: 100%;
   margin-top: 4px;
   padding: 8px;
-  color: var(--primary-color);
-  background-color: var(--secondary-color);
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
   font-size: 24px;
   border: none;
-  border-bottom: 2px solid var(--primary-color);
-  caret-color: var(--primary-color);
+  border-bottom: 2px solid var(--secondary-color);
+  caret-color: var(--secondary-color);
 }
 
 .passphrase__content h1 {
@@ -71,9 +71,9 @@
   margin: 16px 0 32px 0;
   padding: 8px;
   font-size: 22px;
-  color: var(--primary-color);
-  background-color: var(--secondary-color);
-  border: 2px solid var(--primary-color);
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
+  border: 2px solid var(--secondary-color);
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -84,7 +84,7 @@
 .passphrase__content button:hover:not(:disabled) {
   transition: all .25s cubic-bezier(.645, .045, .355, 1);
   color: white;
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
 }
 
 .passphrase__content button:disabled {

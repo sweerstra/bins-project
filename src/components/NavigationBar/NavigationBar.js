@@ -5,6 +5,36 @@ import './NavigationBar.css';
 
 class NavigationBar extends Component {
   componentDidMount() {
+    this.obtainColors();
+  }
+
+  render() {
+    return (
+      <header className="navigation-bar">
+        <Link to="/bin" className="navigation-bar__title">
+          Bins Projectje
+          <img src={images.garbageBin} width={40} height={40}/>
+        </Link>
+        <div className="navigation-bar__colors">
+          <input type="color" className="textbox"
+                 data-color="--primary-color"
+                 onChange={this.setColor}/>
+          <input type="color" className="textbox"
+                 data-color="--secondary-color"
+                 onChange={this.setColor}/>
+          <a href="#" onClick={this.resetColors}>Reset</a>
+        </div>
+      </header>
+    );
+  }
+
+  setColor({ target: { dataset: { color }, value } }) {
+    localStorage.setItem(color, value);
+    localStorage.setItem(`${color}-default`, getComputedStyle(document.documentElement).getPropertyValue(color));
+    document.documentElement.style.setProperty(color, value);
+  }
+
+  obtainColors() {
     document.querySelectorAll('[data-color]')
       .forEach(input => {
         const { dataset: { color } } = input;
@@ -16,28 +46,16 @@ class NavigationBar extends Component {
       });
   }
 
-  render() {
-    return (
-      <header className="Navigation-Container">
-        <Link to="/bin" className="Navigation-Container-title">
-          Bins Projectje
-          <img src={images.garbageBin} width={40} height={40}/>
-        </Link>
-        <div>
-          <input type="color" className="themeColor textbox"
-                 data-color="--primary-color"
-                 onChange={this.setColor}/>
-          <input type="color" className="themeColor textbox"
-                 data-color="--secondary-color"
-                 onChange={this.setColor}/>
-        </div>
-      </header>
-    );
-  }
+  resetColors(e) {
+    e.preventDefault();
 
-  setColor({ target: { dataset: { color }, value } }) {
-    localStorage.setItem(color, value);
-    document.documentElement.style.setProperty(color, value);
+    document.querySelectorAll('[data-color]').forEach(input => {
+      const { dataset: { color } } = input;
+      const value = localStorage.getItem(`${color}-default`);
+      input.value = value;
+      document.documentElement.style.setProperty(color, value);
+      localStorage.removeItem(color);
+    });
   }
 }
 

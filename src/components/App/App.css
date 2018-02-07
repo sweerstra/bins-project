@@ -4,11 +4,11 @@
 }
 
 .clickable:hover {
-  color: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 .feather:hover {
-  stroke: var(--primary-color);
+  stroke: var(--secondary-color);
   cursor: pointer;
 }
 
