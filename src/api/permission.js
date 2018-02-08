@@ -1,9 +1,9 @@
 import Request from './Request';
-import { AUTH_API } from '../constants';
+import { BINS_API } from '../constants';
 
 export default {
   getPermission(passphrase) {
-    return Request.post(AUTH_API, { phrase: 'phrase', passphrase });
+    return Request.post(`${BINS_API}/auth`, { phrase: 'phrase', passphrase });
   },
 
   hasPermission() {

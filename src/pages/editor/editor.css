@@ -8,10 +8,10 @@
 
 @media (max-width: 800px) {
   .editor {
-    grid-template-areas: "header header" "bins bins" "selection selection" "console libraries";
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 80px 1fr 1fr 1fr;
-    height: calc(300% + 80px);
+    grid-template-areas: "header" "bins" "selection" "console" "libraries";
+    grid-template-columns: 1fr;
+    grid-template-rows: 80px repeat(4, 1fr);
+    height: fit-content;
   }
 
   .bins,

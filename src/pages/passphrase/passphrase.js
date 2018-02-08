@@ -31,15 +31,18 @@ class Passphrase extends Component {
               <input type="text" className={rejected ? 'rejected' : ''}
                      onChange={this.onTextChange.bind(this)}
                      ref={input => this.input = input}
-                     placeholder="phrase" spellCheck="false" autoFocus="true"/>
+                     placeholder="phrase" autoFocus="true" spellCheck="false" autoCapitalize="none"/>
             </label>
-            <p className="rejected" style={{ visibility: rejected ? 'visible' : 'hidden' }}>Wrong passphrase, try
-              again.</p>
+            <p className="rejected" style={{ visibility: rejected ? 'visible' : 'hidden' }}>
+              Wrong passphrase, try again.
+            </p>
             <button disabled={disableConfirm}>
               Confirm
             </button>
           </form>
-          <a onClick={this.onReadOnly.bind(this)}>Or continue in read-only mode.</a>
+          <div className="read-only">
+            <a onClick={this.onReadOnly.bind(this)}>Or continue in read-only mode.</a>
+          </div>
         </div>
       </div>
     );
@@ -77,7 +80,6 @@ class Passphrase extends Component {
 
   onReadOnly(e) {
     e.preventDefault();
-
     this.props.history.push('/bin');
   }
 }

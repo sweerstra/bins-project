@@ -114,8 +114,7 @@ export const authenticate = passphrase => dispatch => {
         dispatch({ type: types.CONFIRM_PERMISSION });
         localStorage.setItem('phrase', hash);
         return true;
-      } else {
-        return false;
       }
+      return false;
     });
 };

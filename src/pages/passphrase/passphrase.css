@@ -106,3 +106,17 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+@media all and (max-width: 800px) {
+  .passphrase {
+    padding: 0 20px;
+  }
+
+  .passphrase__content .read-only {
+    text-align: center;
+  }
+
+  .passphrase__content h1 {
+    font-size: 30px;
+  }
+}
