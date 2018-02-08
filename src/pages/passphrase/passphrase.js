@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import images from '../assets/images';
+import images from '../../assets/images';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { authenticate } from '../actions/index';
+import { authenticate } from '../../actions/index';
 import './passphrase.css';
 
 class Passphrase extends Component {
@@ -23,13 +23,14 @@ class Passphrase extends Component {
       <div className="passphrase">
         <div className="passphrase__content">
           <h1>Viewing JS bins
-            <img src={images.garbageBin} width={60} height={60}/>
+            <img src={images.garbageBin} width={60} height={60} alt="Logo"/>
           </h1>
           <form onSubmit={this.onConfirm.bind(this)}>
             <label>
               Enter your passphrase below
               <input type="text" className={rejected ? 'rejected' : ''}
                      onChange={this.onTextChange.bind(this)}
+                     ref={input => this.input = input}
                      placeholder="phrase" spellCheck="false" autoFocus="true"/>
             </label>
             <p className="rejected" style={{ visibility: rejected ? 'visible' : 'hidden' }}>Wrong passphrase, try
@@ -38,7 +39,7 @@ class Passphrase extends Component {
               Confirm
             </button>
           </form>
-          <a href="#" onClick={this.onReadOnly.bind(this)}>Or continue in read-only mode.</a>
+          <a onClick={this.onReadOnly.bind(this)}>Or continue in read-only mode.</a>
         </div>
       </div>
     );
@@ -52,20 +53,25 @@ class Passphrase extends Component {
   }
 
   onConfirm(e) {
+    const { target } = e;
     e.preventDefault();
 
     this.props.onAuthenticate(this.state.passphrase)
-      .then(({ isAuthenticated }) => {
-        if (isAuthenticated === false) {
-          this.setRejected();
+      .then(result => {
+        if (result === false) {
+          this.showRejectionMessage(() => {
+            target.reset();
+            this.input.focus();
+          });
         }
       });
   }
 
-  setRejected() {
+  showRejectionMessage(callback) {
     this.setState({ rejected: true });
     setTimeout(() => {
       this.setState({ rejected: false });
+      callback();
     }, 3000);
   }
 

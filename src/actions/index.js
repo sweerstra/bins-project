@@ -108,17 +108,14 @@ export const importURLAsBin = url => {
 };
 
 export const authenticate = passphrase => dispatch => {
-  // dispatch({ type: types.CONFIRM_PERMISSION });
-
-  // localStorage.setItem('phrase', 'phrasje');
-
-  return Promise.resolve({ isAuthenticated: false });
-
   return PermissionApi.getPermission(passphrase)
-    .then(({ isAuthenticated, phrase }) => {
+    .then(({ isAuthenticated, hash }) => {
       if (isAuthenticated) {
         dispatch({ type: types.CONFIRM_PERMISSION });
-        return isAuthenticated;
+        localStorage.setItem('phrase', hash);
+        return true;
+      } else {
+        return false;
       }
     });
 };

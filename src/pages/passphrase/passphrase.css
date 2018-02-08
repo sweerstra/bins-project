@@ -103,4 +103,6 @@
 .passphrase__content a {
   color: white;
   font-size: 18px;
+  text-decoration: underline;
+  cursor: pointer;
 }

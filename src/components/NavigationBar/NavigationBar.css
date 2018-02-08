@@ -23,4 +23,9 @@
 .navigation-bar__colors a {
   margin-left: 4px;
   color: white;
+  cursor: pointer;
+}
+
+.navigation-bar__colors a:hover {
+  text-decoration: underline;
 }
