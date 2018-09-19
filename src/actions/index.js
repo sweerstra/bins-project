@@ -1,8 +1,5 @@
-import BinsApi from '../api/bins';
-import LibrariesApi from '../api/libraries';
-import DataApi from '../api/data';
-import PermissionApi from '../api/permission';
 import * as types from '../constants/ActionTypes';
+import Api from '../api';
 
 export const requestBins = () => ({
   type: types.REQUEST_BINS
@@ -15,13 +12,13 @@ const receiveBins = bins => ({
 
 export const fetchBins = () => dispatch => {
   dispatch(requestBins());
-  BinsApi.getBins().then((bins) => {
+  Api.Bins.getBins().then((bins) => {
     dispatch(receiveBins(bins));
   });
 };
 
-export const fetchSingleBin = _id => dispatch => {
-  BinsApi.getBin(_id).then(bin => {
+export const fetchSingleBin = id => dispatch => {
+  Api.Bins.getBin(id).then(bin => {
     if (bin) {
       dispatch(selectBin(bin));
     }
@@ -47,16 +44,16 @@ const addBin = (_id = '', name = '', selection = '') => ({
 
 export const removeBin = _id => dispatch => {
   dispatch({ type: types.REMOVE_BIN, _id });
-  BinsApi.removeBin(_id);
+  Api.Bins.removeBin(_id);
 };
 
 export const saveBin = (_id, selection) => dispatch => {
   dispatch({ type: types.SAVE_BIN, _id, selection });
-  BinsApi.saveBin({ _id, selection });
+  Api.Bins.saveBin({ _id, selection });
 };
 
 export const createBin = (name, selection) => dispatch => {
-  return BinsApi.addBin({ name, selection }).then(({ insertedId: _id }) => {
+  return Api.Bins.addBin({ name, selection }).then(({ insertedId: _id }) => {
     dispatch(addBin(_id, name, selection));
     return _id;
   });
@@ -64,7 +61,7 @@ export const createBin = (name, selection) => dispatch => {
 
 export const editBin = (_id, name) => dispatch => {
   dispatch({ type: types.EDIT_BIN, _id, name });
-  BinsApi.saveBin({ _id, name });
+  Api.Bins.saveBin({ _id, name });
 };
 
 export const addLog = (message, logType) => ({
@@ -83,7 +80,7 @@ const receiveDefaultLibraries = defaultLibraries => ({
 });
 
 export const fetchDefaultLibraries = () => dispatch => {
-  LibrariesApi.getLibraries().then((libraries) => {
+  Api.Libraries.getLibraries().then((libraries) => {
     dispatch(receiveDefaultLibraries(libraries));
   });
 };
@@ -94,7 +91,7 @@ export const addDefaultLibraryIfNew = library => (dispatch, getState) => {
   const { defaultLibraries } = getState().libraries;
 
   if (defaultLibraries.length > initialLength) {
-    LibrariesApi.setLibraries(defaultLibraries);
+    Api.Libraries.setLibraries(defaultLibraries);
   }
 };
 
@@ -104,11 +101,11 @@ export const toggleLibraryMenu = librariesVisible => ({
 });
 
 export const importURLAsBin = url => {
-  return DataApi.getCode(url);
+  return Api.Data.getCode(url);
 };
 
 export const authenticate = passphrase => dispatch => {
-  return PermissionApi.getPermission(passphrase)
+  return Api.Permission.getPermission(passphrase)
     .then(({ isAuthenticated, hash }) => {
       if (isAuthenticated) {
         dispatch({ type: types.CONFIRM_PERMISSION });

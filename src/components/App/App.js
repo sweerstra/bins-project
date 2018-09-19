@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Editor from '../../pages/editor/editor';
-import Passphrase from '../../pages/passphrase/passphrase';
+import Editor from '../pages/Editor/Editor';
+import Passphrase from '../pages/Passphrase/Passphrase';
 import './App.css';
 
 const App = () => (

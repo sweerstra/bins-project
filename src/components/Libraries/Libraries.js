@@ -25,7 +25,7 @@ class Libraries extends Component {
     const { selectedLibraries, onAddSelectedLibrary, onRemoveSelectedLibrary, onHideLibraryMenu } = this.props;
 
     return (
-      <div className="library-container">
+      <div className="libraries">
         <div className="libraries__header">
           Libraries
           <img src={images.minusCircle}

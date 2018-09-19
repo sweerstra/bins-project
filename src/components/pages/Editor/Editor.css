@@ -18,6 +18,10 @@
   .selection {
     border-right: none;
   }
+
+  .libraries {
+    border-left: none;
+  }
 }
 
 header { grid-area: header; }

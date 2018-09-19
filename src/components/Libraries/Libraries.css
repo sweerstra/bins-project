@@ -1,4 +1,4 @@
-.library-container {
+.libraries {
   background-color: var(--primary-color);
   border-left: 3px solid var(--secondary-color);
 }

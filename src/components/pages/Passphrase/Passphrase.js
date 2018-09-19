@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import images from '../../assets/images';
+import images from '../../../assets/images';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { authenticate } from '../../actions/index';
-import './passphrase.css';
+import { authenticate } from '../../../actions/index';
+import './Passphrase.css';
 
 class Passphrase extends Component {
   constructor() {
@@ -51,7 +51,7 @@ class Passphrase extends Component {
   onTextChange({ target: { value } }) {
     this.setState({
       passphrase: value,
-      disableConfirm: value.length <= 3
+      disableConfirm: value.length <= 4
     });
   }
 
