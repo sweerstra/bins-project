@@ -1,6 +1,6 @@
 class Request {
   get(url) {
-    return this._request(url);
+    return Request._request(url);
   }
 
   getText(url) {
@@ -9,7 +9,7 @@ class Request {
   }
 
   post(url, data) {
-    return this._request(url, {
+    return Request._request(url, {
       method: 'post',
       body: JSON.stringify(data),
       headers: {
@@ -19,7 +19,7 @@ class Request {
   }
 
   put(url, data) {
-    return this._request(url, {
+    return Request._request(url, {
       method: 'put',
       body: JSON.stringify(data),
       headers: {
@@ -29,7 +29,7 @@ class Request {
   }
 
   delete(url, data) {
-    return this._request(url, {
+    return Request._request(url, {
       method: 'delete',
       body: JSON.stringify(data),
       headers: {
@@ -38,11 +38,28 @@ class Request {
     });
   }
 
-  _request(url, options) {
+  static _request(url, options = {}) {
     return fetch(url, options)
-      .then(resp => resp.json())
-      .catch(err => err);
-  };
+      .then(Request.checkStatus)
+      .then(Request.parseJSON);
+  }
+
+  static parseJSON(response) {
+    if (response.status === 204 || response.status === 205) {
+      return null;
+    }
+    return response.json();
+  }
+
+  static checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    }
+
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
 }
 
 export default new Request();

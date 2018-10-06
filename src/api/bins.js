@@ -1,24 +1,12 @@
 import Request from '../api/Request';
 import { BINS_API } from '../constants';
 
-const getBin = (_id) => {
-  return Request.get(`${BINS_API}/bin/${_id}`);
-};
+export const getBin = (id) => Request.get(`${BINS_API}/bin/${id}`);
 
-const getBins = () => {
-  return Request.get(`${BINS_API}/bins`);
-};
+export const getBins = () => Request.get(`${BINS_API}/bins`);
 
-const addBin = (bin) => {
-  return Request.post(`${BINS_API}/bin`, bin);
-};
+export const addBin = (bin) => Request.post(`${BINS_API}/bins`, bin);
 
-const saveBin = (bin) => {
-  return Request.put(`${BINS_API}/bin`, bin);
-};
+export const saveBin = ({ id, name, code }) => Request.put(`${BINS_API}/bin/${id}`, { name, code });
 
-const removeBin = (_id) => {
-  return Request.delete(`${BINS_API}/bin/${_id}`);
-};
-
-export default { getBin, getBins, addBin, saveBin, removeBin };
+export const removeBin = (id) => Request.delete(`${BINS_API}/bin/${id}`);

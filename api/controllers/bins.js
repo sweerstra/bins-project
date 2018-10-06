@@ -3,9 +3,9 @@ const Bin = mongoose.model('Bin');
 
 exports.addBin = async (req, res) => {
   const newBin = new Bin(req.body);
-  const { id } = await newBin.save();
+  const bin = await newBin.save();
 
-  res.json({ id });
+  res.json(bin);
 };
 
 exports.getBin = async (req, res, next) => {

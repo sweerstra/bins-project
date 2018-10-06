@@ -12,9 +12,9 @@ const binSchema = new mongoose.Schema({
     type: String,
     required: 'Your bin must have a name!'
   },
-  selection: {
+  code: {
     type: String,
-    required: 'Your bin must have a selection!'
+    default: 'console.log(\'foo\');'
   }
 });
 
