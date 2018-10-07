@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, Link, SubTitle } from '../../ui/index';
 import { flexBetween, flexCenter, flexStart } from '../../ui/mixins';
-import { DeleteIcon } from '../../ui/icons';
 
 const Wrapper = styled.nav`
   grid-area: navbar;
@@ -14,14 +13,6 @@ const MainBar = styled.div`
   padding: 0 4rem;
   ${flexBetween};
   background-color: ${props => props.theme.color.white};
-`;
-
-const Title = styled(SubTitle)`
-  ${flexCenter};
-  
-  ${DeleteIcon} {
-    margin-left: .6rem;
-  }
 `;
 
 const List = styled.ul`
@@ -57,10 +48,9 @@ const Alert = styled.span`
 const Navbar = ({ authenticated, alert, onViewLibraries, navigateToPassphrase }) => (
   <Wrapper>
     <MainBar>
-      <Title color="primary">
-        Bins
-        <DeleteIcon/>
-      </Title>
+      <SubTitle color="primary">
+        Bins 🗑️
+      </SubTitle>
 
       <List horizontal>
         <ListItem>

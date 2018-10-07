@@ -26,6 +26,10 @@ const Log = styled.div`
   font-family: consolas;
 `;
 
+export const Unselectable = styled.span`
+  user-select: none;
+`;
+
 class Console extends Component {
   state = {
     logs: []
@@ -58,7 +62,7 @@ class Console extends Component {
     return (
       <Wrapper>
         {logs.map((log, index) =>
-          <Log key={index}>> {log}</Log>
+          <Log key={index}><Unselectable>{'> '}</Unselectable>{log}</Log>
         )}
       </Wrapper>
     );
