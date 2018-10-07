@@ -1,8 +1,6 @@
-class Request {
-  constructor() {
-    this._headers = {};
-  }
+import { storage } from './storage';
 
+class Request {
   get(url) {
     return this._request(url);
   }
@@ -42,15 +40,15 @@ class Request {
     });
   }
 
-  modifyHeaders(cb) {
-    cb(this._headers);
-  }
-
   _request(url, options = {}) {
-    options.headers = {
-      ...options.headers,
-      ...this._headers
-    };
+    const headers = options.headers || {};
+    const token = storage.get('token');
+
+    if (token) {
+      headers.Authorization = token;
+    }
+
+    options.headers = headers;
 
     return fetch(url, options)
       .then(Request.checkStatus)

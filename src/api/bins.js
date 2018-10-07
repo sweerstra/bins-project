@@ -1,14 +1,5 @@
 import Request from '../api/Request';
 import { BINS_API } from '../constants';
-import { storage } from './storage';
-
-Request.modifyHeaders(headers => {
-  const token = storage.get('token');
-
-  if (token) {
-    headers.Authorization = token;
-  }
-});
 
 export const getBin = (id) => Request.get(`${BINS_API}/bin/${id}`);
 

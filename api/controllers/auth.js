@@ -10,11 +10,8 @@ exports.verifyToken = (req, res, next) => {
   const secret = process.env.JWT_SECRET;
   jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      console.log({ err });
       return res.status(500).send({ message: 'Authentication failed.' });
     }
-
-    console.log({ decoded });
 
     req.userId = decoded.id;
     next();
