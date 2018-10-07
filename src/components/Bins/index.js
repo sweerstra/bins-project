@@ -33,7 +33,7 @@ const List = styled.ul`
   list-style-type: none;
 `;
 
-export const ListItem = styled.li`
+const ListItem = styled.li`
   width: 100%;
   height: 5rem;
   padding: 0 ${p => p.theme.padding.medium};

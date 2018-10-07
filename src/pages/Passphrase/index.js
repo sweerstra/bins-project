@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { boxShadow, flexCenter, flexStart } from '../../ui/mixins';
-import { Button, Heading, Input, Label, Link } from '../../ui/index';
+import { Button, Heading, Input, Label, Link } from '../../ui';
 import { verify } from '../../api/user';
 
 const Wrapper = styled.div`
@@ -42,7 +42,6 @@ const Content = styled.div`
 class Passphrase extends Component {
   state = {
     passphrase: '',
-    approved: false,
     rejected: false
   };
 
@@ -57,14 +56,15 @@ class Passphrase extends Component {
     const { passphrase } = this.state;
 
     verify(passphrase)
-      .then(() => this.setState({ approved: true }))
+      .then(({ token }) => this.props.setAuthenticated(true, token))
       .catch(() => this.setState({ passphrase: '', rejected: true }));
   };
 
   render() {
-    const { passphrase, approved, rejected } = this.state;
+    const { passphrase, rejected } = this.state;
+    const { authenticated } = this.props;
 
-    if (approved) {
+    if (authenticated) {
       return <Redirect to="/bins"/>;
     }
 

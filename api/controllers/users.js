@@ -1,18 +1,26 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const jwt = require('jsonwebtoken');
 
 exports.addUser = async (req, res) => {
   const user = new User(req.body);
 
-  const { username } = await user.save();
+  const secret = process.env.JWT_SECRET;
+  const token = jwt.sign({ id: user.id }, secret, { expiresIn: '12h' });
 
-  res.json({ username });
+  await user.save();
+
+  res.json({ token });
 };
 
-exports.getUsers = async (req, res, next) => {
-  const users = await User.find({});
+exports.getUser = async (req, res) => {
+  const user = await User.findById(req.userId, { password: 0 });
 
-  res.json(users);
+  if (!user) {
+    next();
+  }
+
+  res.json(user);
 };
 
 exports.verifyUser = async (req, res, next) => {
@@ -30,5 +38,8 @@ exports.verifyUser = async (req, res, next) => {
     return next();
   }
 
-  res.json({ username });
+  const secret = process.env.JWT_SECRET;
+  const token = jwt.sign({ id: user.id }, secret, { expiresIn: '12h' });
+
+  res.json({ token });
 };

@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import EditorContainer from '../../containers/EditorContainer';
 import BinsContainer from '../../containers/BinsContainer';
 import Console from '../../components/Console';
+import LibrariesContainer from '../../containers/LibrariesContainer';
 import { getBin } from '../../api/bins';
 
 const Wrapper = styled.div`
@@ -16,7 +17,8 @@ const Wrapper = styled.div`
 
 class Dashboard extends PureComponent {
   state = {
-    bin: {}
+    bin: {},
+    librariesToggle: false
   };
 
   async componentDidMount() {
@@ -38,19 +40,33 @@ class Dashboard extends PureComponent {
     }));
   };
 
-  viewLibrariesModal = () => {
+  toggleLibraries = () => {
+    this.setState(state => ({ librariesToggle: !state.librariesToggle }));
+  };
 
+  navigateToPassphrase = () => {
+    const { authenticated } = this.props;
+
+    if (authenticated) {
+      this.props.setAuthenticated(!authenticated);
+    }
+
+    this.props.history.replace('/passphrase');
   };
 
   render() {
-    const { bin } = this.state;
+    const { bin, librariesToggle } = this.state;
+    const { authenticated } = this.props;
 
     return (
       <Wrapper>
-        <Navbar onViewLibraries={this.viewLibrariesModal}/>
+        <Navbar onViewLibraries={this.toggleLibraries}
+                navigateToPassphrase={this.navigateToPassphrase}
+                authenticated={authenticated}/>
         <EditorContainer bin={bin} onCodeChange={this.onBinCodeChange}/>
         <BinsContainer bin={bin} onSelectBin={this.selectBin}/>
         <Console/>
+        <LibrariesContainer show={librariesToggle} onHide={this.toggleLibraries}/>
       </Wrapper>
     );
   }

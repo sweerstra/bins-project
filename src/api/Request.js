@@ -1,6 +1,10 @@
 class Request {
+  constructor() {
+    this._headers = {};
+  }
+
   get(url) {
-    return Request._request(url);
+    return this._request(url);
   }
 
   getText(url) {
@@ -9,7 +13,7 @@ class Request {
   }
 
   post(url, data) {
-    return Request._request(url, {
+    return this._request(url, {
       method: 'post',
       body: JSON.stringify(data),
       headers: {
@@ -19,7 +23,7 @@ class Request {
   }
 
   put(url, data) {
-    return Request._request(url, {
+    return this._request(url, {
       method: 'put',
       body: JSON.stringify(data),
       headers: {
@@ -29,7 +33,7 @@ class Request {
   }
 
   delete(url, data) {
-    return Request._request(url, {
+    return this._request(url, {
       method: 'delete',
       body: JSON.stringify(data),
       headers: {
@@ -38,7 +42,16 @@ class Request {
     });
   }
 
-  static _request(url, options = {}) {
+  modifyHeaders(cb) {
+    cb(this._headers);
+  }
+
+  _request(url, options = {}) {
+    options.headers = {
+      ...options.headers,
+      ...this._headers
+    };
+
     return fetch(url, options)
       .then(Request.checkStatus)
       .then(Request.parseJSON);
