@@ -25,8 +25,9 @@ class Dashboard extends PureComponent {
     const { id } = this.props.match.params;
     if (id === undefined) return;
 
-    const bin = await getBin(id);
-    this.selectBin(bin);
+    getBin(id)
+      .then(this.selectBin)
+      .catch(() => this.props.history.replace(`/bins`));
   }
 
   selectBin = (bin) => {

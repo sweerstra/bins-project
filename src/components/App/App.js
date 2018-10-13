@@ -3,11 +3,17 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Dashboard from '../../pages/Dashboard';
 import Passphrase from '../../pages/Passphrase';
 import { storage } from '../../api/storage';
+import { checkAuth } from '../../api/user';
 
 class App extends Component {
   state = {
     authenticated: storage.get('token')
   };
+
+  componentDidMount() {
+    checkAuth()
+      .catch(() => this.setAuthenticated(false));
+  }
 
   setAuthenticated = (authenticated, token) => {
     if (!authenticated) {

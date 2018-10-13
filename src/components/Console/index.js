@@ -41,9 +41,9 @@ class Console extends Component {
 
   overrideConsoleLog() {
     const log = console.log;
-    console.log = (message) => {
+    console.log = (...messages) => {
       log.apply(console, arguments);
-      this.setState(state => ({ logs: [...state.logs, Console.formatLog(message)] }));
+      this.setState(state => ({ logs: [...state.logs, ...messages.map(Console.formatLog)] }));
     };
 
     window.log = log;

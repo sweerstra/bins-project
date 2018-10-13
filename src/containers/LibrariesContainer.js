@@ -4,42 +4,41 @@ import Libraries from '../components/Libraries';
 
 class LibrariesContainer extends Component {
   state = {
-    url: '',
     libraries: [],
-    error: false
+    presets: [
+      {
+        name: 'Lodash',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'
+      },
+      {
+        name: 'jQuery',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'
+      },
+      {
+        name: 'Moment.js',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js'
+      },
+      {
+        name: 'date-fns',
+        url: 'https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.29.0/date_fns.min.js'
+      }
+    ]
   };
 
-  onChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({ [name]: value });
-  };
+  addLibrary = (library) => {
+    this.setState(state => ({ libraries: [...state.libraries, library] }));
 
-  addLibrary = (e) => {
-    e.preventDefault();
-
-    const { url } = this.state;
-    const name = url.split('/').pop();
-
-    if (!name) {
-      return this.setState({ error: true });
-    }
-
-    const library = { name, url };
-    this.setState(state => ({ libraries: [...state.libraries, library], url: '', error: false }));
-
-    appendScriptToDOM(url);
+    appendScriptToDOM(library.url);
   };
 
   removeLibrary = (library) => {
-    this.setState(state => ({
-      libraries: state.libraries.filter(lib => lib.url !== library.url)
-    }));
+    this.setState(state => ({ libraries: state.libraries.filter(l => l.name !== library.name) }));
 
     removeScriptFromDOM(library.url);
   };
 
   render() {
-    const { url, libraries, error } = this.state;
+    const { libraries, presets } = this.state;
     const { show, onHide } = this.props;
 
     return (
@@ -48,12 +47,10 @@ class LibrariesContainer extends Component {
         title="Libraries"
         onModalClose={onHide}>
         <Libraries
-          url={url}
           libraries={libraries}
+          presets={presets}
           onAdd={this.addLibrary}
-          onChange={this.onChange}
-          onRemove={this.removeLibrary}
-          error={error}/>
+          onRemove={this.removeLibrary}/>
       </Modal>
     );
   }

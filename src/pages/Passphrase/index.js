@@ -19,7 +19,6 @@ const Header = styled.div`
   
   ${Heading} {
     color: ${p => p.theme.color.primary};
-    border-bottom: .6rem solid ${p => p.theme.color.primary}; 
     font-size: 4rem;
     font-weight: bold;
   }
@@ -30,7 +29,7 @@ const Content = styled.div`
   padding: 3rem;
   color: ${p => p.theme.color.secondary};
   background-color: ${p => p.theme.color.white};
-  border-top: .6rem solid ${p => p.theme.color.primary};
+  border-top: .4rem solid ${p => p.theme.color.primary};
   border-radius: 0 0 .6rem .6rem;
   ${boxShadow};
   
@@ -73,7 +72,7 @@ class Passphrase extends Component {
     return (
       <Wrapper>
         <Header>
-          <Heading>Bins</Heading>
+          <Heading>🗑️</Heading>
         </Header>
 
         <Content>
