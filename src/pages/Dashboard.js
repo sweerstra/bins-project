@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
-import Navbar from '../../components/Navbar';
-import EditorContainer from '../../containers/EditorContainer';
-import BinsContainer from '../../containers/BinsContainer';
-import Console from '../../components/Console';
-import LibrariesContainer from '../../containers/LibrariesContainer';
-import { getBin } from '../../api/bins';
+import Navbar from '../components/Navbar';
+import EditorContainer from '../containers/EditorContainer';
+import BinsContainer from '../containers/BinsContainer';
+import Console from '../components/Console';
+import LibrariesContainer from '../containers/LibrariesContainer';
+import { getBin } from '../api/bins';
 
 const Wrapper = styled.div`
   min-height: 100vh;

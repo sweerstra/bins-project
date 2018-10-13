@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Link, SubTitle } from '../../ui/index';
-import { flexBetween, flexCenter, flexStart } from '../../ui/mixins';
+import { Button, Link, SubTitle } from '../ui/index';
+import { flexBetween, flexCenter, flexStart } from '../ui/mixins';
 
 const Wrapper = styled.nav`
   grid-area: navbar;

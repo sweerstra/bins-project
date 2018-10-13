@@ -1,8 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Input, Label } from '../../ui/index';
-import { Button } from '../../ui';
-import { flexBetween } from '../../ui/mixins';
+import { Button, Input, Label } from '../ui/index';
+import { flexBetween } from '../ui/mixins';
 
 const Wrapper = styled.aside`
   grid-area: bins;

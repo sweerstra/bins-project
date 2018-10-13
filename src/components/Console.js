@@ -23,6 +23,7 @@ const Wrapper = styled.div`
 `;
 
 const Log = styled.div`
+  color: ${p => p.theme.color[p.color]};
   font-family: consolas;
 `;
 
@@ -40,29 +41,41 @@ class Console extends Component {
   }
 
   overrideConsoleLog() {
-    const log = console.log;
-    console.log = (...messages) => {
-      log.apply(console, arguments);
-      this.setState(state => ({ logs: [...state.logs, ...messages.map(Console.formatLog)] }));
+    const createLogger = (type) => {
+      const log = console[type];
+      console[type] = (...messages) => {
+        log.apply(console, arguments);
+        this.setState(state => ({
+          logs: [...state.logs, ...messages.map(message => Console.createConsoleMessage(message, type))]
+        }));
+      };
     };
 
-    window.log = log;
+    createLogger('log');
+    createLogger('error');
   }
 
-  static formatLog(log) {
-    if (log === undefined) return 'undefined';
-    if (log === null) return 'null';
-    if (typeof log === 'object') return JSON.stringify(log);
-    return log;
+  static createConsoleMessage(message, type) {
+    let text = message;
+    if (text === undefined) text = 'undefined';
+    if (text === null) text = 'null';
+    if (typeof text === 'object') text = JSON.stringify(text);
+    return { text, type };
   }
 
   render() {
     const { logs } = this.state;
 
+    const logColors = {
+      log: 'primary',
+      error: 'danger',
+      warn: 'warning'
+    };
+
     return (
       <Wrapper>
-        {logs.map((log, index) =>
-          <Log key={index}><Unselectable>{'> '}</Unselectable>{log}</Log>
+        {logs.map(({ text, type }, index) =>
+          <Log color={logColors[type]} key={index}><Unselectable>{'> '}</Unselectable>{text}</Log>
         )}
       </Wrapper>
     );

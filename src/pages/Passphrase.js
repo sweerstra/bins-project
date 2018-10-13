@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { boxShadow, flexCenter, flexStart } from '../../ui/mixins';
-import { Button, Heading, Input, Label, Link } from '../../ui';
-import { verify } from '../../api/user';
+import { boxShadow, flexCenter, flexStart } from '../ui/mixins';
+import { Button, Heading, Input, Label, Link } from '../ui/index';
+import { verify } from '../api/user';
 
 const Wrapper = styled.div`
   width: 100%;

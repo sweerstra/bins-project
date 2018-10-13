@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Modal from '../components/Modal';
+import Modal from '../components/modals/Modal';
 import Libraries from '../components/Libraries';
 
 class LibrariesContainer extends Component {

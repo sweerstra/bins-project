@@ -7,11 +7,11 @@ import { checkAuth } from '../../api/user';
 
 class App extends Component {
   state = {
-    authenticated: storage.get('token')
+    authenticated: !!storage.get('token')
   };
 
   componentDidMount() {
-    checkAuth()
+    this.state.authenticated && checkAuth()
       .catch(() => this.setAuthenticated(false));
   }
 

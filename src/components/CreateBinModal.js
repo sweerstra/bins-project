@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ConfirmModal from '../Modal/ConfirmModal';
-import { Input, Label } from '../../ui';
+import ConfirmModal from './modals/ConfirmModal';
+import { Input, Label } from '../ui/index';
 
 class CreateBinModal extends Component {
   state = {

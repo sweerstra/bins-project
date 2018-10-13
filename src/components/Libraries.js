@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Input, Label, Link } from '../../ui';
-import { boxShadow, flexBetween } from '../../ui/mixins';
-import { themeHoverSwitch } from '../../ui/theme';
+import { Input, Label, Link } from '../ui/index';
+import { boxShadow, flexBetween } from '../ui/mixins';
+import { themeHoverSwitch } from '../ui/theme';
 
 const Wrapper = styled.div`
   form {

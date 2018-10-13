@@ -80,7 +80,7 @@ class BinsContainer extends Component {
     const { bin, onSelectBin } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Bins
           bins={this.filteredBins}
           selected={bin}
@@ -93,7 +93,7 @@ class BinsContainer extends Component {
           isOpen={createBinModalIsOpen}
           onSave={this.addBin}
           onClose={this.closeCreateBinModal}/>
-      </React.Fragment>
+      </>
     );
   }
 }

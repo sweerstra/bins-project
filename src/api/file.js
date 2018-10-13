@@ -4,11 +4,11 @@ const getFilename = (url) => {
   return url.split('/').pop();
 };
 
-const getCode = async (url) => {
+const getBinFromFile = async (url) => {
   const name = getFilename(url);
-  const gist = await Request.getText(url);
+  const code = await Request.getText(url);
 
-  return { name, selection: gist };
+  return { name, code };
 };
 
-export default { getCode };
+export default { getBinFromFile };

@@ -12,7 +12,7 @@ require('./models/User');
 require('./models/Bin');
 
 const app = require('./app');
-app.set('port', process.env.PORT || 8082);
+app.set('port', process.env.PORT || 4000);
 const server = app.listen(app.get('port'), () => {
   console.log(`> Server running on port ${server.address().port}`);
 });
