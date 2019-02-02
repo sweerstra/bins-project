@@ -50,7 +50,7 @@ const Close = styled.span`
   float: right;
   
   &:hover {
-    color: ${props => props.theme.color.primary};
+    color: ${props => props.theme.color.tint};
   }
 `;
 

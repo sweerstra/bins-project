@@ -1,11 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import EditorContainer from '../containers/EditorContainer';
 import BinsContainer from '../containers/BinsContainer';
 import Console from '../components/Console';
 import LibrariesContainer from '../containers/LibrariesContainer';
-import { getBin } from '../api/bins';
+import SettingsContainer from '../containers/SettingsContainer';
+import Api from '../api/bins';
+import SettingsContext from '../context/Settings';
+import { settings as initialSettings } from '../constants/presets';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -15,62 +18,79 @@ const Wrapper = styled.div`
   grid-template-areas: "navbar navbar" "editor bins" "console bins";
 `;
 
-class Dashboard extends PureComponent {
-  state = {
-    bin: {},
-    librariesToggle: false
-  };
+const Dashboard = React.memo(({ match, history, authenticated, handleAuthentication }) => {
+  const [bin, setBin] = useState({});
+  const [settings, setSettings] = useState(initialSettings);
+  const [librariesToggle, setLibrariesToggle] = useState(false);
+  const [settingsToggle, setSettingsToggle] = useState(false);
 
-  async componentDidMount() {
-    const { id } = this.props.match.params;
-    if (id === undefined) return;
+  useEffect(() => {
+    const { id } = match.params;
 
-    getBin(id)
-      .then(this.selectBin)
-      .catch(() => this.props.history.replace(`/bins`));
-  }
-
-  selectBin = (bin) => {
-    this.setState({ bin });
-    this.props.history.replace(`/bins/${bin.id}`);
-  };
-
-  onBinCodeChange = (code) => {
-    this.setState(state => ({
-      bin: { ...state.bin, code }
-    }));
-  };
-
-  toggleLibraries = () => {
-    this.setState(state => ({ librariesToggle: !state.librariesToggle }));
-  };
-
-  navigateToPassphrase = () => {
-    const { authenticated } = this.props;
-
-    if (authenticated) {
-      this.props.setAuthenticated(!authenticated);
+    if (id !== undefined) {
+      Api.getBin(id)
+        .then(selectBin)
+        .catch(() => history.replace('/bins'));
     }
+  }, []);
 
-    this.props.history.replace('/passphrase');
-  };
+  function selectBin(bin) {
+    setBin(bin);
 
-  render() {
-    const { bin, librariesToggle } = this.state;
-    const { authenticated } = this.props;
+    const url = bin.id
+      ? `/bins/${bin.id}`
+      : '/bins';
 
-    return (
-      <Wrapper>
-        <Navbar onViewLibraries={this.toggleLibraries}
-                navigateToPassphrase={this.navigateToPassphrase}
-                authenticated={authenticated}/>
-        <EditorContainer bin={bin} onCodeChange={this.onBinCodeChange}/>
-        <BinsContainer bin={bin} onSelectBin={this.selectBin}/>
-        <Console/>
-        <LibrariesContainer show={librariesToggle} onHide={this.toggleLibraries}/>
-      </Wrapper>
-    );
+    history.replace(url);
   }
-}
+
+  function onBinCodeChange(code) {
+    setBin({ ...bin, code });
+  }
+
+  function onSettingsChange(type, newSettings) {
+    setSettings({
+      ...settings,
+      [type]: newSettings
+    });
+
+    /*setSettings({
+      ...settings,
+      [setting]: {
+        ...settings[setting],
+        [type]: value
+      }
+    });*/
+  }
+
+  function toggleLibraries() {
+    setLibrariesToggle(!librariesToggle);
+  }
+
+  function toggleSettings() {
+    setSettingsToggle(!settingsToggle);
+  }
+
+  function logout() {
+    handleAuthentication(false);
+  }
+
+  return (
+    <SettingsContext.Provider value={{ settings, onSettingsChange }}>
+      <Wrapper>
+        <Navbar
+          onViewLibraries={toggleLibraries}
+          onViewSettings={toggleSettings}
+          onLogout={logout}
+          authenticated={authenticated}/>
+        <EditorContainer bin={bin} onCodeChange={onBinCodeChange}/>
+        <BinsContainer bin={bin} onSelectBin={selectBin}/>
+        <Console/>
+        <LibrariesContainer show={librariesToggle} onHide={toggleLibraries}/>
+        <SettingsContainer show={settingsToggle} onHide={toggleSettings}/>
+      </Wrapper>
+    </SettingsContext.Provider>
+  );
+});
 
 export default Dashboard;

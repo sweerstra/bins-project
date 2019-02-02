@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
+import SettingsContext from '../context/Settings';
 
 const Wrapper = styled.div`
   grid-area: console;
@@ -27,59 +28,52 @@ const Log = styled.div`
   font-family: consolas;
 `;
 
-export const Unselectable = styled.span`
+const Unselectable = styled.span`
   user-select: none;
 `;
 
-class Console extends Component {
-  state = {
-    logs: []
-  };
+export default function Console() {
+  const { settings } = useContext(SettingsContext);
+  const [logs, setLogs] = useState([]);
 
-  componentDidMount() {
-    this.overrideConsoleLog();
-  }
+  const consolesToUse = Object.entries(settings.consoles)
+    .filter(([type, value]) => value)
+    .map(([type]) => type);
 
-  overrideConsoleLog() {
-    const createLogger = (type) => {
+  console.log(consolesToUse);
+
+  /* useEffect(() => {
+    consolesToUse.forEach(type => {
       const log = console[type];
       console[type] = (...messages) => {
-        log.apply(console, arguments);
-        this.setState(state => ({
-          logs: [...state.logs, ...messages.map(message => Console.createConsoleMessage(message, type))]
-        }));
+        const newLogs = messages.map(message => createConsoleMessage(message, type));
+        setLogs([...logs, ...newLogs]);
+        log.apply(console, messages);
       };
-    };
+    });
+  }, []);  */
 
-    createLogger('log');
-    createLogger('error');
-  }
+  const colors = {
+    log: 'primary',
+    error: 'danger',
+    warn: 'warning'
+  };
 
-  static createConsoleMessage(message, type) {
-    let text = message;
-    if (text === undefined) text = 'undefined';
-    if (text === null) text = 'null';
-    if (typeof text === 'object') text = JSON.stringify(text);
-    return { text, type };
-  }
-
-  render() {
-    const { logs } = this.state;
-
-    const logColors = {
-      log: 'primary',
-      error: 'danger',
-      warn: 'warning'
-    };
-
-    return (
-      <Wrapper>
-        {logs.map(({ text, type }, index) =>
-          <Log color={logColors[type]} key={index}><Unselectable>{'> '}</Unselectable>{text}</Log>
-        )}
-      </Wrapper>
-    );
-  }
+  return (
+    <Wrapper>
+      {logs.map(({ text, type }, index) =>
+        <Log color={colors[type]} key={index}>
+          <Unselectable>> </Unselectable>{text}
+        </Log>
+      )}
+    </Wrapper>
+  );
 }
 
-export default Console;
+function createConsoleMessage(message, type) {
+  let text = message;
+  if (text === undefined) text = 'undefined';
+  else if (text === null) text = 'null';
+  else if (typeof text === 'object') text = JSON.stringify(text);
+  return { text, type };
+}

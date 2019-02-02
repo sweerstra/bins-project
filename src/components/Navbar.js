@@ -45,7 +45,7 @@ const Alert = styled.span`
   font-weight: bold;
 `;
 
-const Navbar = ({ authenticated, alert, onViewLibraries, navigateToPassphrase }) => (
+const Navbar = ({ authenticated, alert, onViewLibraries, onViewSettings, onLogout }) => (
   <Wrapper>
     <MainBar>
       <SubTitle color="primary">
@@ -57,10 +57,10 @@ const Navbar = ({ authenticated, alert, onViewLibraries, navigateToPassphrase })
           <Button onClick={onViewLibraries} clear>Libraries</Button>
         </ListItem>
         <ListItem>
-          <Button clear>Settings</Button>
+          <Button onClick={onViewSettings} clear>Settings</Button>
         </ListItem>
         <ListItem>
-          <Button onClick={navigateToPassphrase} clear>
+          <Button onClick={onLogout} clear>
             Passphrase {authenticated ? '✔️' : '❌'}
           </Button>
         </ListItem>

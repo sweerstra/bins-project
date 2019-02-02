@@ -1,52 +1,50 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Login from '../../pages/Login';
 import Dashboard from '../../pages/Dashboard';
-import Passphrase from '../../pages/Passphrase';
 import { storage } from '../../api/storage';
 import { checkAuth } from '../../api/user';
 
-class App extends Component {
-  state = {
-    authenticated: !!storage.get('token')
-  };
+export default function App() {
+  const [authenticated, setAuthenticated] = useState(!!storage.get('token'));
 
-  componentDidMount() {
-    this.state.authenticated && checkAuth()
-      .catch(() => this.setAuthenticated(false));
-  }
+  useEffect(() => {
+    if (authenticated) {
+      checkAuth()
+        .catch(() => onHandleAuthentication(false));
+    }
+  }, []);
 
-  setAuthenticated = (authenticated, token) => {
-    if (!authenticated) {
-      storage.remove('token');
-    } else {
+  function onHandleAuthentication(auth, token) {
+    if (auth) {
       if (token) {
         storage.set('token', token);
       }
+    } else {
+      storage.remove('token');
     }
 
-    this.setState({ authenticated });
-  };
+    setAuthenticated(auth);
+  }
 
-  render() {
-    const { authenticated } = this.state;
-
-    const withAuthStatus = (Component) => (props) => (
+  function withAuthentication(Component) {
+    return (props) => (
       <Component
         authenticated={authenticated}
-        setAuthenticated={this.setAuthenticated}
+        handleAuthentication={onHandleAuthentication}
         {...props}/>
     );
-
-    return (
-      <div>
-        <Switch>
-          <Route path="/bins/:id?" render={withAuthStatus(Dashboard)}/>
-          <Route exact path="/passphrase" render={withAuthStatus(Passphrase)}/>
-          <Redirect to="/passphrase"/>
-        </Switch>
-      </div>
-    );
   }
-}
 
-export default App;
+  return (
+    <Switch>
+      <Route exact path="/login" render={withAuthentication(Login)}/>
+      <Route path="/bins/:id?" render={props => (
+        authenticated
+          ? withAuthentication(Dashboard)(props)
+          : <Redirect to="/login"/>
+      )}/>
+      <Redirect to="/login"/>
+    </Switch>
+  );
+}

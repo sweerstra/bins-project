@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useInput } from '../hooks/form';
 import { Input, Label, Link } from '../ui/index';
 import { boxShadow, flexBetween } from '../ui/mixins';
 import { themeHoverSwitch } from '../ui/theme';
@@ -75,90 +75,72 @@ const Divider = styled.hr`
 	margin: 2rem 0 0 0;
 `;
 
-class Libraries extends Component {
-  state = {
-    url: '',
-    suggestionsAreVisible: false,
-    error: false
-  };
+function Libraries({ libraries, presets, onAdd, onRemove }) {
+  const [url, setUrl, onUrlChange] = useInput();
+  const [suggestionsAreVisible, setSuggestionsAreVisible] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  onChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({ [name]: value });
-  };
-
-  toggleSuggestions = (e) => {
+  function toggleSuggestions(e) {
     e.preventDefault();
-    this.setState(state => ({ suggestionsAreVisible: !state.suggestionsAreVisible }));
-  };
+    setSuggestionsAreVisible(!suggestionsAreVisible);
+  }
 
-  addLibrary = (e) => {
+  function addLibrary(e) {
     e.preventDefault();
 
-    const { url } = this.state;
     const name = url.split('/').pop();
 
     if (url && name) {
-      this.setState({ url: '', error: false });
-      this.props.onAdd({ name, url });
+      setUrl('');
+      setHasError(false);
+      onAdd({ name, url });
     } else {
-      this.setState({ error: true });
+      setHasError(true);
     }
-  };
-
-  addPresetLibrary = (library) => {
-    this.setState({ suggestionsAreVisible: false });
-    this.props.onAdd(library);
-  };
-
-  render() {
-    const { url, suggestionsAreVisible, error } = this.state;
-    const { libraries, presets, onRemove } = this.props;
-
-    return (
-      <Wrapper>
-        <form onSubmit={this.addLibrary} autoComplete="off" spellCheck="false">
-          <Label error={error}>
-            <LabelHeader>
-              {error ? 'This seems to be an invalid library 😞' : 'Add library URL'}
-              <Presets onClick={this.toggleSuggestions}
-                       color="primary"
-                       bold={suggestionsAreVisible}>Presets</Presets>
-            </LabelHeader>
-            <Input name="url" value={url} onChange={this.onChange}/>
-          </Label>
-
-          <Suggestions show={suggestionsAreVisible}>
-            {presets.map(library =>
-              <Suggestion onClick={() => this.addPresetLibrary(library)} key={library.name}>
-                {library.name}
-              </Suggestion>
-            )}
-          </Suggestions>
-
-          <Divider/>
-
-          <List>
-            {libraries.length > 0
-              ? libraries.map(library =>
-                <ListItem key={library.name}>
-                  <Link href={library.url}>{library.name}</Link>
-                  <RemoveLinkSign onClick={() => onRemove(library)}>&times;</RemoveLinkSign>
-                </ListItem>)
-              : <ListItem>
-                No libraries were found. 📚
-              </ListItem>}
-          </List>
-        </form>
-      </Wrapper>
-    );
   }
-}
 
-Libraries.propTypes = {
-  libraries: PropTypes.arrayOf(PropTypes.object),
-  onAdd: PropTypes.func,
-  onRemove: PropTypes.func
-};
+  function addPresetLibrary(library) {
+    setSuggestionsAreVisible(false);
+    onAdd(library);
+  }
+
+  return (
+    <Wrapper>
+      <form onSubmit={addLibrary} autoComplete="off" spellCheck="false">
+        <Label error={hasError}>
+          <LabelHeader>
+            {hasError ? 'This seems to be an invalid library 😞' : 'Add library URL'}
+            <Presets onClick={toggleSuggestions}
+                     color="primary"
+                     bold={suggestionsAreVisible}>Presets</Presets>
+          </LabelHeader>
+          <Input value={url} onChange={onUrlChange} placeholder="https://example.com/library.js"/>
+        </Label>
+
+        <Suggestions show={suggestionsAreVisible}>
+          {presets.map(library =>
+            <Suggestion onClick={() => addPresetLibrary(library)} key={library.name}>
+              {library.name}
+            </Suggestion>
+          )}
+        </Suggestions>
+
+        <Divider/>
+
+        <List>
+          {libraries.length > 0
+            ? libraries.map(library =>
+              <ListItem key={library.name}>
+                <Link href={library.url}>{library.name}</Link>
+                <RemoveLinkSign onClick={() => onRemove(library)}>&times;</RemoveLinkSign>
+              </ListItem>)
+            : <ListItem>
+              No libraries were found. 📚
+            </ListItem>}
+        </List>
+      </form>
+    </Wrapper>
+  );
+}
 
 export default Libraries;

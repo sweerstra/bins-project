@@ -1,101 +1,78 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Bins from '../components/Bins';
-import { addBin, getBins, removeBin, saveBin } from '../api/bins';
-import CreateBinModal from '../components/CreateBinModal';
+import Api from '../api/bins';
+import CreateBinModal from '../components/CreateBinModal/CreateBinModal';
+import { useInput } from '../hooks/form';
+import { useKeyDown } from '../hooks/event';
 
-class BinsContainer extends Component {
-  state = {
-    bins: [],
-    search: '',
-    createBinModalIsOpen: false
-  };
+export default function BinsContainer({ bin, onSelectBin }) {
+  const [bins, setBins] = useState([]);
+  const [search, setSearch, onSearchChange] = useInput();
+  const [createBinModalIsOpen, setCreateBinModalIsOpen] = useState(false);
 
-  async componentDidMount() {
-    const bins = await getBins();
-    this.setState({ bins });
+  useEffect(async () => {
+    const bins = await Api.getBins();
+    setBins(bins);
+  }, []);
 
-    window.addEventListener('keydown', this.onKeyDown);
+  useKeyDown(e => e.ctrlKey && e.key === 's', e => {
+    e.preventDefault();
+    saveBin();
+  });
+
+  async function createBin({ name }) {
+    const bin = await Api.addBin({ name });
+
+    closeCreateBinModal();
+    setSearch('');
+    setBins([...bins, bin]);
+    onSelectBin(bin);
   }
 
-  onKeyDown = (e) => {
-    if (e.ctrlKey && e.key === 's') {
-      e.preventDefault();
-      this.saveBin();
-    }
-  };
-
-  openCreateBinModal = () => this.setState({ createBinModalIsOpen: true });
-
-  addBin = async ({ name }) => {
-    // get the editor's code
-    const { code } = this.props.bin;
-
-    const bin = await addBin({ name, code });
-    this.setState(state => ({
-      createBinModalIsOpen: false,
-      bins: [...state.bins, bin]
-    }));
-
-    this.props.onSelectBin(bin);
-  };
-
-  saveBin = async () => {
-    const { bin } = this.props;
-
+  async function saveBin() {
     if (bin.id) {
-      await saveBin(bin);
+      await Api.saveBin(bin);
     } else {
-      this.openCreateBinModal();
+      openCreateBinModal();
     }
-  };
+  }
 
-  removeBin = async ({ id }) => {
-    this.setState(({ bins }) => ({
-      bins: bins.filter(bin => bin.id !== id)
-    }));
+  async function removeBin({ id }) {
+    setBins(bins.filter(bin => bin.id !== id));
 
-    const { bin } = this.props;
-
+    // removed bin is selected
     if (id === bin.id) {
-      this.props.onSelectBin({});
+      onSelectBin({});
     }
 
-    await removeBin(id);
-  };
-
-  closeCreateBinModal = () => this.setState({ createBinModalIsOpen: false });
-
-  searchBin = (e) => {
-    this.setState({ search: e.target.value });
-  };
-
-  get filteredBins() {
-    const { bins, search } = this.state;
-    const regex = new RegExp(search, 'i');
-    return bins.filter(bin => bin.name.match(regex));
+    await Api.removeBin(id);
   }
 
-  render() {
-    const { createBinModalIsOpen } = this.state;
-    const { bin, onSelectBin } = this.props;
-
-    return (
-      <>
-        <Bins
-          bins={this.filteredBins}
-          selected={bin}
-          onSelect={onSelectBin}
-          onCreateNew={this.openCreateBinModal}
-          onSave={this.saveBin}
-          onRemove={this.removeBin}
-          onSearch={this.searchBin}/>
-        <CreateBinModal
-          isOpen={createBinModalIsOpen}
-          onSave={this.addBin}
-          onClose={this.closeCreateBinModal}/>
-      </>
-    );
+  function openCreateBinModal() {
+    setCreateBinModalIsOpen(true);
   }
+
+  function closeCreateBinModal() {
+    setCreateBinModalIsOpen(false);
+  }
+
+  const regex = new RegExp(search, 'i');
+  const filteredBins = bins.filter(bin => bin.name.match(regex));
+
+  return (
+    <>
+      <Bins
+        bins={filteredBins}
+        selected={bin}
+        onSelect={onSelectBin}
+        onCreateNew={openCreateBinModal}
+        onSave={saveBin}
+        onRemove={removeBin}
+        onSearch={onSearchChange}/>
+      <CreateBinModal
+        isOpen={createBinModalIsOpen}
+        onSave={createBin}
+        onClose={closeCreateBinModal}/>
+    </>
+  );
 }
-
-export default BinsContainer;

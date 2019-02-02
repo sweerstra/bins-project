@@ -73,7 +73,7 @@ const Bins = ({ bins, selected, onSelect, onCreateNew, onSave, onRemove, onSearc
 
     <Section>
       <Label>
-        Search bin
+        Search
         <Input onChange={onSearch}/>
       </Label>
     </Section>

@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
-import 'brace/theme/tomorrow';
+import 'brace/theme/github';
 
-export const Wrapper = styled.div`
+const Wrapper = styled.div`
   grid-area: editor;
 `;
 
@@ -13,7 +13,7 @@ const Editor = ({ code, onCodeChange }) => (
     <AceEditor
       style={{ width: '100%', height: '100%' }}
       mode="javascript"
-      theme="tomorrow"
+      theme="github"
       onChange={onCodeChange}
       value={code}
       fontSize={16}

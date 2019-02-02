@@ -1,21 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Editor from '../components/Editor';
+import { useKeyDown } from '../hooks/event';
 
-class EditorContainer extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.onKeyDown);
-  }
+function EditorContainer({ bin, onCodeChange }) {
+  useKeyDown(e => e.ctrlKey && e.key === 'Enter', e => {
+    e.preventDefault();
+    runCode();
+  });
 
-  onKeyDown = (e) => {
-    if (e.ctrlKey && e.key === 'Enter') {
-      e.preventDefault();
-      this.runCode();
-    }
-  };
+  const { code = '' } = bin;
 
-  runCode = () => {
-    const { code = '' } = this.props.bin;
-
+  function runCode() {
     if (!code.trim()) {
       return;
     }
@@ -25,17 +20,13 @@ class EditorContainer extends Component {
     } catch (e) {
       console.error(e.message);
     }
-  };
-
-  render() {
-    const { bin: { code }, onCodeChange } = this.props;
-
-    return (
-      <Editor
-        code={code}
-        onCodeChange={onCodeChange}/>
-    );
   }
+
+  return (
+    <Editor
+      code={code}
+      onCodeChange={onCodeChange}/>
+  );
 }
 
 export default EditorContainer;

@@ -30,6 +30,48 @@ Input.defaultProps = {
   color: 'primary'
 };
 
+export const Checkbox = styled.input.attrs({
+  type: 'checkbox'
+})`
+  -webkit-appearance: none;
+  border: 0.1rem solid ${p => p.theme.color.tint};
+  padding: 1.2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:focus {
+    outline: 0;
+  }
+  
+  &:checked {
+    border: 0.1rem solid ${p => p.theme.color[p.color]};
+    color: var(--main-red);
+  }
+  
+  &:checked:after {
+    content: '\\2714';
+    font-size: 1.5rem;
+    color: ${p => p.theme.color[p.color]};
+  }
+  
+  &:disabled,
+  &:checked:disabled {
+    border-color: ${p => p.theme.color.quaternary};
+  }
+  
+  &:checked:disabled:after {
+    color: ${p => p.theme.color.quaternary};
+  }
+`;
+
+Checkbox.defaultProps = {
+  color: 'primary'
+};
+
 export const TextArea = styled.textarea`
   ${textInput};
   min-height: 6.5rem;
@@ -60,6 +102,7 @@ export const Label = styled.label`
   font-size: 1.3rem;
   font-weight: bold;
   color: ${p => p.error && p.theme.color.danger};
+  display: ${p => p.block && 'block'}; 
 `;
 
 Label.defaultProps = {
