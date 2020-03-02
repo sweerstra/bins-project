@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import AceEditor from 'react-ace';
-import 'brace/mode/javascript';
-import 'brace/theme/github';
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/theme-github';
 
 const Wrapper = styled.div`
   grid-area: editor;

@@ -14,7 +14,7 @@ const Container = styled.div`
   transform: scale(1.1);
   transition: visibility 0s linear 0.25s;
   z-index: 10;
-  
+
   ${props => props.show && `
     opacity: 1;
     visibility: visible;
@@ -40,24 +40,26 @@ Content.defaultProps = {
   width: '40rem'
 };
 
-const Close = styled.span`
+const CloseButton = styled.button`
   width: 1.5rem;
+  background-color: transparent;
+  border: 0;
   font-size: 3rem;
   line-height: 1.5rem;
   color: ${props => props.theme.color.quaternary};
   text-align: center;
   cursor: pointer;
   float: right;
-  
+
   &:hover {
     color: ${props => props.theme.color.tint};
   }
 `;
 
-const Modal = ({ isOpen = false, title, closable = true, onModalClose, children }) => (
-  <Container show={isOpen}>
+const Modal = ({ isOpen = false, title, closable = true, onClose, children }) => (
+  <Container show={isOpen} data-testid="modal-container">
     <Content>
-      {closable && <Close onClick={onModalClose}>&times;</Close>}
+      {closable && <CloseButton onClick={onClose} data-testid="modal-close-button">&times;</CloseButton>}
       <SmallTitle color="primary" marginBottom>{title}</SmallTitle>
       {children}
     </Content>

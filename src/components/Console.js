@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import SettingsContext from '../context/Settings';
+import { useSettings } from '../context/Settings';
 
 const Wrapper = styled.div`
   grid-area: console;
@@ -9,15 +9,15 @@ const Wrapper = styled.div`
   padding: ${p => p.theme.padding.medium};
   box-shadow: -.4rem 0 .6rem 0 ${props => props.theme.color.quaternary};
   z-index: 4;
-  
+
   &::-webkit-scrollbar-track {
     background-color: ${p => p.theme.color.tertiary};
   }
-  
+
   &::-webkit-scrollbar {
     width: 1rem;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background-color: ${p => p.theme.color.quaternary};
   }
@@ -33,25 +33,25 @@ const Unselectable = styled.span`
 `;
 
 export default function Console() {
-  const { settings } = useContext(SettingsContext);
+  const { settings } = useSettings();
   const [logs, setLogs] = useState([]);
 
-  const consolesToUse = Object.entries(settings.consoles)
-    .filter(([type, value]) => value)
-    .map(([type]) => type);
+  const consolesToUse = useMemo(() =>
+    Object.entries(settings.consoles.values)
+      .reduce((consoles, [console, shouldUse]) => {
+        shouldUse && consoles.push(console);
+        return consoles;
+      }), [settings]);
 
-  console.log(consolesToUse);
-
-  /* useEffect(() => {
+  useEffect(() => {
     consolesToUse.forEach(type => {
       const log = console[type];
       console[type] = (...messages) => {
-        const newLogs = messages.map(message => createConsoleMessage(message, type));
+        const newLogs = messages.map(message => ({ text: parseToString(message), type }));
         setLogs([...logs, ...newLogs]);
-        log.apply(console, messages);
       };
     });
-  }, []);  */
+  }, [consolesToUse]);
 
   const colors = {
     log: 'primary',
@@ -70,10 +70,9 @@ export default function Console() {
   );
 }
 
-function createConsoleMessage(message, type) {
+function parseToString(message) {
   let text = message;
-  if (text === undefined) text = 'undefined';
-  else if (text === null) text = 'null';
+  if (text === undefined || text === null) text = String(text);
   else if (typeof text === 'object') text = JSON.stringify(text);
-  return { text, type };
+  return text;
 }

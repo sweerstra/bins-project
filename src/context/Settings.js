@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import { settings as initialSettings } from '../constants/presets';
 
-const SettingsContext = React.createContext({
-  settings: {},
-  onSettingsChange: () => {
-  }
-});
+export const SettingsContext = createContext();
+export const SettingsProvider = ({ children }) => {
+  const [settings, setSettings] = useState(initialSettings);
 
-export default SettingsContext;
+  return (
+    <SettingsContext.Provider
+      value={{ settings, setSettings }}
+    >
+      {children}
+    </SettingsContext.Provider>
+  );
+};
+
+export const useSettings = () => useContext(SettingsContext);

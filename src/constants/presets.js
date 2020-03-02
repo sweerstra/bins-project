@@ -19,6 +19,7 @@ export const libraries = [
 
 export const settings = {
   consoles: {
+    label: 'Consoles to use',
     enabled: true,
     values: {
       log: true,

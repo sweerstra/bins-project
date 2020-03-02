@@ -1,37 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import Bins from '../components/Bins';
+import { useParams, useHistory } from 'react-router-dom';
+import Bins from '../components/Bins/Bins';
 import Api from '../api/bins';
-import CreateBinModal from '../components/CreateBinModal/CreateBinModal';
+import CreateBinModal from '../components/Modals/CreateBinModal';
+import { useSelectedBin } from '../context/SelectedBin';
 import { useInput } from '../hooks/form';
 import { useKeyDown } from '../hooks/event';
 
-export default function BinsContainer({ bin, onSelectBin }) {
+export default function BinsContainer() {
+  const history = useHistory();
+  const { id: binId } = useParams();
+  const { selectedBin, setSelectedBin } = useSelectedBin();
   const [bins, setBins] = useState([]);
   const [search, setSearch, onSearchChange] = useInput();
   const [createBinModalIsOpen, setCreateBinModalIsOpen] = useState(false);
 
-  useEffect(async () => {
-    const bins = await Api.getBins();
-    setBins(bins);
+  useEffect(() => {
+    async function fetchBins() {
+      const bins = await Api.getBins();
+      setBins(bins);
+    }
+    fetchBins();
   }, []);
 
-  useKeyDown(e => e.ctrlKey && e.key === 's', e => {
-    e.preventDefault();
-    saveBin();
-  });
+  useEffect(() => {
+    if (binId !== undefined) {
+      Api.getBin(binId)
+        .then(updateSelectedBin)
+        .catch(() => history.replace('/bins'));
+    }
+  }, []);
+
+  useKeyDown(
+    e => e.ctrlKey && e.key === 's',
+    true,
+    () => saveBin()
+  );
+
+  function updateSelectedBin(bin) {
+    setSelectedBin(bin);
+    updateUrlWithBin(bin);
+  }
+
+  function updateUrlWithBin(bin) {
+    const path = bin.id ? `/bins/${bin.id}` : '/bins';
+    history.replace(path);
+  }
 
   async function createBin({ name }) {
     const bin = await Api.addBin({ name });
-
-    closeCreateBinModal();
     setSearch('');
     setBins([...bins, bin]);
-    onSelectBin(bin);
+    updateSelectedBin(bin);
   }
 
   async function saveBin() {
-    if (bin.id) {
-      await Api.saveBin(bin);
+    if (selectedBin.id) {
+      await Api.saveBin(selectedBin);
     } else {
       openCreateBinModal();
     }
@@ -40,21 +65,16 @@ export default function BinsContainer({ bin, onSelectBin }) {
   async function removeBin({ id }) {
     setBins(bins.filter(bin => bin.id !== id));
 
-    // removed bin is selected
-    if (id === bin.id) {
-      onSelectBin({});
+    // if removed bin is currently selected, reset it
+    if (id === selectedBin.id) {
+      updateSelectedBin({});
     }
 
     await Api.removeBin(id);
   }
 
-  function openCreateBinModal() {
-    setCreateBinModalIsOpen(true);
-  }
-
-  function closeCreateBinModal() {
-    setCreateBinModalIsOpen(false);
-  }
+  const openCreateBinModal = () => setCreateBinModalIsOpen(true);
+  const closeCreateBinModal = () => setCreateBinModalIsOpen(false);
 
   const regex = new RegExp(search, 'i');
   const filteredBins = bins.filter(bin => bin.name.match(regex));
@@ -63,16 +83,16 @@ export default function BinsContainer({ bin, onSelectBin }) {
     <>
       <Bins
         bins={filteredBins}
-        selected={bin}
-        onSelect={onSelectBin}
-        onCreateNew={openCreateBinModal}
+        selected={selectedBin}
+        onSelect={updateSelectedBin}
+        onCreate={openCreateBinModal}
         onSave={saveBin}
         onRemove={removeBin}
-        onSearch={onSearchChange}/>
+        onSearch={onSearchChange} />
       <CreateBinModal
         isOpen={createBinModalIsOpen}
         onSave={createBin}
-        onClose={closeCreateBinModal}/>
+        onClose={closeCreateBinModal} />
     </>
   );
 }

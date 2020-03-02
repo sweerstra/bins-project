@@ -7,7 +7,7 @@ const textInput = css`
   border-radius: 0.4rem;
   box-shadow: none;
   box-sizing: inherit;
-  font-size: 1.4rem;  
+  font-size: 1.4rem;
   font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   height: 3.8rem;
   margin-bottom: ${p => p.margin ? '1rem' : '0'};
@@ -18,10 +18,12 @@ const textInput = css`
     border-color: ${p => p.theme.color[p.color]};
     outline: 0;
   }
-  
+
   &::placeholder {
     color: ${p => p.theme.color.quaternary};
   }
+
+  ${p => p.error && `border-color: ${p.theme.color.danger};`}
 `;
 
 export const Input = styled.input`${textInput}`;
@@ -42,27 +44,27 @@ export const Checkbox = styled.input.attrs({
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &:focus {
     outline: 0;
   }
-  
+
   &:checked {
     border: 0.1rem solid ${p => p.theme.color[p.color]};
     color: var(--main-red);
   }
-  
+
   &:checked:after {
     content: '\\2714';
     font-size: 1.5rem;
     color: ${p => p.theme.color[p.color]};
   }
-  
+
   &:disabled,
   &:checked:disabled {
     border-color: ${p => p.theme.color.quaternary};
   }
-  
+
   &:checked:disabled:after {
     color: ${p => p.theme.color.quaternary};
   }
@@ -100,11 +102,12 @@ Select.defaultProps = {
 
 export const Label = styled.label`
   font-size: 1.3rem;
-  font-weight: bold;
+  font-weight: ${p => p.bold && 'bold'};
   color: ${p => p.error && p.theme.color.danger};
-  display: ${p => p.block && 'block'}; 
+  display: ${p => p.block && 'block'};
 `;
 
 Label.defaultProps = {
-  color: 'primary'
+  color: 'primary',
+  bold: true,
 };

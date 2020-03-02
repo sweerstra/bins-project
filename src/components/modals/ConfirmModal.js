@@ -15,13 +15,13 @@ const ConfirmButton = styled(Button).attrs({ color: 'success' })`
 
 const CancelButton = styled(Button).attrs({ outline: true })``;
 
-const ConfirmModal = ({ confirmable = true, onConfirm, onModalClose, disableSave, children, ...rest }) => (
-  <Modal onModalClose={onModalClose} {...rest}>
+const ConfirmModal = ({ isConfirmable, onConfirm, onCancel, children, ...rest }) => (
+  <Modal closable={false} {...rest}>
     {children}
-    {confirmable && <Buttons>
-      <CancelButton onClick={onModalClose}>Cancel</CancelButton>
-      <ConfirmButton onClick={onConfirm} disabled={disableSave}>Save</ConfirmButton>
-    </Buttons>}
+    <Buttons>
+      <CancelButton onClick={onCancel}>Cancel</CancelButton>
+      <ConfirmButton onClick={onConfirm} disabled={!isConfirmable}>Save</ConfirmButton>
+    </Buttons>
   </Modal>
 );
 

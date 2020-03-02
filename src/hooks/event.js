@@ -1,15 +1,16 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
-export const useKeyDown = (predicate, handler) => {
-  const callback = e => {
-    return predicate(e) && handler(e);
-  };
+export function useKeyDown(predicate, prevent, handler) {
+  const callback = useCallback(e => {
+    if (predicate(e)) {
+      if (prevent) e.preventDefault();
+      handler(e);
+    }
+  }, [predicate, prevent, handler]);
 
   useEffect(() => {
     window.addEventListener('keydown', callback);
 
-    return () => {
-      window.removeEventListener('keydown', callback);
-    }
-  }, [predicate, handler]);
-};
+    return () => window.removeEventListener('keydown', callback);
+  }, [callback]);
+}

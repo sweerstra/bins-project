@@ -1,13 +1,13 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Button, Input, Label } from '../ui/index';
-import { flexBetween } from '../ui/mixins';
+import { Button, Input, Label } from '../../ui';
+import { flexBetween } from '../../ui/mixins';
 
 const Wrapper = styled.aside`
   grid-area: bins;
   background-color: ${p => p.theme.color.white};
   box-shadow: 0 4px 6px 0 ${p => p.theme.color.quaternary};
-  z-index: 1;  
+  z-index: 1;
 `;
 
 const Section = styled.div`
@@ -38,35 +38,36 @@ const ListItem = styled.li`
   padding: 0 ${p => p.theme.padding.medium};
   ${flexBetween};
   cursor: pointer;
-  
+
   &:hover {
     background-color: ${p => p.theme.color.tertiary};
   }
-  
+
   ${p => p.active && css`
     background-color: ${p => p.theme.color.tertiary};
     font-weight: bold;
   `}
-  
+
   ${Button} {
     display: none;
   }
-  
+
   &:hover ${Button} {
     display: block;
   }
 `;
 
-const Bins = ({ bins, selected, onSelect, onCreateNew, onSave, onRemove, onSearch }) => (
+const Bins = ({ bins, selected, onSelect, onCreate, onSave, onRemove, onSearch }) => (
   <Wrapper>
     <Section>
-      <Button onClick={onCreateNew}>Create New Bin</Button>
+      <Button onClick={onCreate}>Create New Bin</Button>
     </Section>
 
     <Section>
-      <Button color="success"
-              onClick={() => onSave(selected)}
-              disabled={!selected.code}>Save Bin</Button>
+      <Button
+        color="success"
+        onClick={() => onSave(selected)}
+        disabled={!selected.code}>Save Bin</Button>
     </Section>
 
     <Divider></Divider>
@@ -74,7 +75,7 @@ const Bins = ({ bins, selected, onSelect, onCreateNew, onSave, onRemove, onSearc
     <Section>
       <Label>
         Search
-        <Input onChange={onSearch}/>
+        <Input onChange={onSearch} />
       </Label>
     </Section>
 
@@ -85,16 +86,18 @@ const Bins = ({ bins, selected, onSelect, onCreateNew, onSave, onRemove, onSearc
         </Label>
       </ListHeader>
       {bins.map(bin =>
-        <ListItem onClick={() => onSelect(bin)}
-                  active={bin.id === selected.id}
-                  key={bin.id}>
+        <ListItem
+          onClick={() => onSelect(bin)}
+          active={bin.id === selected.id}
+          key={bin.id}>
           {bin.name}
-          <Button color="danger"
-                  size="small"
-                  onClick={e => {
-                    e.stopPropagation();
-                    onRemove(bin);
-                  }}>Delete</Button>
+          <Button
+            color="danger"
+            size="small"
+            onClick={e => {
+              e.stopPropagation();
+              onRemove(bin);
+            }}>Delete</Button>
         </ListItem>
       )}
     </List>

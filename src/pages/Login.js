@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import { Redirect } from 'react-router-dom';
-import styled from 'styled-components';
 import { boxShadow, flexCenter, flexStart } from '../ui/mixins';
 import { Button, Heading, Input, Label, Link } from '../ui/index';
 import { useInput } from '../hooks/form';
@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 const Header = styled.div`
   height: 20rem;
   ${flexCenter};
-  
+
   ${Heading} {
     color: ${p => p.theme.color.primary};
     font-size: 4rem;
@@ -33,13 +33,17 @@ const Content = styled.div`
   border-top: .4rem solid ${p => p.theme.color.primary};
   border-radius: 0 0 .6rem .6rem;
   ${boxShadow};
-  
+
+  ${p => p.error && css`
+    border-top-color: ${p => p.theme.color.danger};
+  `}
+
   ${Button} {
     margin: 2rem 0;
   }
 `;
 
-const Login = ({ authenticated, handleAuthentication }) => {
+const Login = ({ isAuthenticated, onVerify }) => {
   const [username, setUsername, onUsernameChange] = useInput();
   const [password, setPassword, onPasswordChange] = useInput();
   const [rejected, setRejected] = useState(false);
@@ -47,9 +51,8 @@ const Login = ({ authenticated, handleAuthentication }) => {
   const onConfirm = (e) => {
     e.preventDefault();
 
-
     verify(username, password)
-      .then(({ token }) => handleAuthentication(true, token))
+      .then(onVerify)
       .catch(() => {
         setUsername('');
         setPassword('');
@@ -57,39 +60,41 @@ const Login = ({ authenticated, handleAuthentication }) => {
       });
   };
 
-  if (authenticated) {
-    return <Redirect to="/bins"/>;
-  }
+  const isLoginDisabled = !username || !password;
 
-  const buttonDisabled = !username || !password;
+  if (isAuthenticated) {
+    return <Redirect to="/bins"/>
+  }
 
   return (
     <Wrapper>
       <Header>
-        <Heading>🗑️</Heading>
+        <Heading>
+          <span role="img" aria-label="bin">🗑️</span>
+        </Heading>
       </Header>
 
-      <Content>
-        <form onSubmit={onConfirm}>
-          {rejected && <Label error block>
-            Invalid username or password 😞
-          </Label>}
-
-          <Label>
+      <Content error={rejected}>
+        <form onSubmit={onConfirm} data-testid="login-form">
+          <Label error={rejected}>
             Username
             <Input type="text"
-                   value={username}
-                   onChange={onUsernameChange}
-                   autoFocus={true}
-                   margin/>
+              value={username}
+              onChange={onUsernameChange}
+              error={rejected}
+              required
+              autoFocus={true}
+              margin />
           </Label>
-          <Label>
+          <Label error={rejected}>
             Password
             <Input type="password"
-                   value={password}
-                   onChange={onPasswordChange}/>
+              value={password}
+              onChange={onPasswordChange}
+              error={rejected}
+              required />
           </Label>
-          <Button color="primary" disabled={buttonDisabled}>
+          <Button color="primary" disabled={isLoginDisabled}>
             Confirm
           </Button>
         </form>

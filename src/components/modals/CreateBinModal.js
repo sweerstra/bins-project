@@ -1,23 +1,28 @@
 import React from 'react';
-import ConfirmModal from '../modals/ConfirmModal';
+import ConfirmModal from './ConfirmModal';
 import { useInput } from '../../hooks/form';
 import { Input, Label } from '../../ui';
 
 function CreateBinModal({ isOpen, onSave, onClose }) {
   const [name, setName, onNameChange] = useInput();
 
+  function saveModal() {
+    closeModal();
+    onSave({ name });
+  }
+
   function closeModal() {
-    onClose();
     setName('');
+    onClose();
   }
 
   return (
     <ConfirmModal
       isOpen={isOpen}
       title="Create Bin"
-      onModalClose={closeModal}
-      onConfirm={() => onSave({ name })}
-      disableSave={!name}>
+      isConfirmable={Boolean(name)}
+      onConfirm={saveModal}
+      onCancel={closeModal}>
       <Label>
         Name
         <Input

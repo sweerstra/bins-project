@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import Modal from '../components/modals/Modal';
-import Libraries from '../components/Libraries';
+import React, { useEffect, useState } from 'react';
+import Modal from '../components/Modals/Modal';
+import Libraries from '../components/Libraries/Libraries';
 import { libraries as presetLibraries } from '../constants/presets';
 
-export default function LibrariesContainer({ show, onHide }) {
+export default function LibrariesContainer({ isVisible, onHide }) {
   const [libraries, setLibraries] = useState([]);
+
+  // const { loaded, error } = useScript();
 
   function addLibrary(library) {
     setLibraries([...libraries, library]);
@@ -12,7 +14,7 @@ export default function LibrariesContainer({ show, onHide }) {
   }
 
   function removeLibrary(library) {
-    setLibraries(libraries.filter(l => l.name !== library.name));
+    setLibraries(libraries.filter(lib => lib.name !== library.name));
     removeScriptFromDOM(library.url);
   }
 
@@ -32,9 +34,9 @@ export default function LibrariesContainer({ show, onHide }) {
 
   return (
     <Modal
-      isOpen={show}
+      isOpen={isVisible}
       title="Libraries"
-      onModalClose={onHide}>
+      onClose={onHide}>
       <Libraries
         libraries={libraries}
         presets={presetLibraries}
@@ -42,4 +44,69 @@ export default function LibrariesContainer({ show, onHide }) {
         onRemove={removeLibrary}/>
     </Modal>
   );
+}
+
+const cachedScripts = [];
+
+function useScript(src) {
+  // Keeping track of script loaded and error state
+  const [state, setState] = useState({
+    loaded: false,
+    error: false
+  });
+
+  useEffect(
+    () => {
+      // If cachedScripts array already includes src that means another instance ...
+      // ... of this hook already loaded this script, so no need to load again.
+      if (cachedScripts.includes(src)) {
+        setState({
+          loaded: true,
+          error: false
+        });
+      } else {
+        cachedScripts.push(src);
+
+        // Create script
+        let script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+
+        // Script event listener callbacks for load and error
+        const onScriptLoad = () => {
+          setState({
+            loaded: true,
+            error: false
+          });
+        };
+
+        const onScriptError = () => {
+          // Remove from cachedScripts we can try loading again
+          const index = cachedScripts.indexOf(src);
+          if (index >= 0) cachedScripts.splice(index, 1);
+          script.remove();
+
+          setState({
+            loaded: true,
+            error: true
+          });
+        };
+
+        script.addEventListener('load', onScriptLoad);
+        script.addEventListener('error', onScriptError);
+
+        // Add script to document body
+        document.body.appendChild(script);
+
+        // Remove event listeners on cleanup
+        return () => {
+          script.removeEventListener('load', onScriptLoad);
+          script.removeEventListener('error', onScriptError);
+        };
+      }
+    },
+    [src] // Only re-run effect if script src changes
+  );
+
+  return state;
 }

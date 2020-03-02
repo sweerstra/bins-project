@@ -1,30 +1,36 @@
 import React from 'react';
-import Editor from '../components/Editor';
+import Editor from '../components/Editor/Editor';
 import { useKeyDown } from '../hooks/event';
+import { useSelectedBin } from '../context/SelectedBin';
 
-function EditorContainer({ bin, onCodeChange }) {
-  useKeyDown(e => e.ctrlKey && e.key === 'Enter', e => {
-    e.preventDefault();
-    runCode();
-  });
+function EditorContainer() {
+  const { selectedBin, setSelectedBin } = useSelectedBin();
 
-  const { code = '' } = bin;
+  useKeyDown(
+    e => e.ctrlKey && e.key === 'Enter',
+    true,
+    () => runCode()
+  );
+
+  function onCodeChange(code) {
+    setSelectedBin({ ...selectedBin, code });
+  }
 
   function runCode() {
-    if (!code.trim()) {
+    if (!selectedBin.code.trim()) {
       return;
     }
 
     try {
-      eval(code);
+      eval(selectedBin.code);
     } catch (e) {
-      console.error(e.message);
+      throw new Error(e.message);
     }
   }
 
   return (
     <Editor
-      code={code}
+      code={selectedBin.code}
       onCodeChange={onCodeChange}/>
   );
 }

@@ -1,16 +1,20 @@
-import React, { useContext } from 'react';
-import Modal from '../components/modals/Modal';
-import Settings from '../components/Settings';
-import SettingsContext from '../context/Settings';
+import React from 'react';
+import Modal from '../components/Modals/Modal';
+import Settings from '../components/Settings/Settings';
+import { useSettings } from '../context/Settings';
 
-export default function SettingsContainer({ show, onHide }) {
-  const { settings, onSettingsChange } = useContext(SettingsContext);
+export default function SettingsContainer({ isVisible, onHide }) {
+  const { settings, setSettings } = useSettings();
+
+  function onSettingsChange(type, value) {
+    setSettings({ ...settings, [type]: value });
+  }
 
   return (
     <Modal
-      isOpen={show}
+      isOpen={isVisible}
       title="Settings"
-      onModalClose={onHide}>
+      onClose={onHide}>
       <Settings
         settings={settings}
         onChange={onSettingsChange}/>
