@@ -56,8 +56,8 @@ const CloseButton = styled.button`
   }
 `;
 
-const Modal = ({ isOpen = false, title, closable = true, onClose, children }) => (
-  <Container show={isOpen} data-testid="modal-container">
+const Modal = ({ isOpen = false, title, closable = true, onClose, children, ...rest }) => (
+  <Container show={isOpen} {...rest}>
     <Content>
       {closable && <CloseButton onClick={onClose} data-testid="modal-close-button">&times;</CloseButton>}
       <SmallTitle color="primary" marginBottom>{title}</SmallTitle>

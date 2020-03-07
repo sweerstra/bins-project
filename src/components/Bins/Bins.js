@@ -22,7 +22,7 @@ const Divider = styled.hr`
 `;
 
 const ListHeader = styled.div`
-  padding 0 ${p => p.theme.padding.medium};
+  padding: 0 ${p => p.theme.padding.medium};
 `;
 
 const List = styled.ul`

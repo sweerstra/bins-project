@@ -20,13 +20,12 @@ describe('<Login />', () => {
     const { getByText } = setup();
     fireEvent.click(getByText(/Confirm/i));
 
-    await wait(() => {
-      expect(verify).not.toHaveBeenCalled();
-    });
+    await wait();
+    expect(verify).not.toHaveBeenCalled();
   });
 
   it('should reject login with invalid username or password', async () => {
-    verify.mockRejectedValueOnce('Not verified');
+    verify.mockRejectedValueOnce(new Error('Not verified'));
 
     const { getByTestId, getByLabelText } = setup();
     fireEvent.change(getByLabelText(/Username/i), { target: { value: 'username' } });
@@ -51,11 +50,10 @@ describe('<Login />', () => {
     fireEvent.change(getByLabelText(/Password/i), { target: { value: 'password' } });
     fireEvent.submit(getByTestId('login-form'));
 
-    await wait(() => {
-      expect(verify).toHaveBeenCalledTimes(1);
-      expect(onVerify).toHaveBeenCalledTimes(1);
-      expect(onVerify).toHaveBeenCalledWith(userData);
-    });
+    await wait();
+    expect(verify).toHaveBeenCalledTimes(1);
+    expect(onVerify).toHaveBeenCalledTimes(1);
+    expect(onVerify).toHaveBeenCalledWith(userData);
   });
 
   it('should initially focus on username input', () => {

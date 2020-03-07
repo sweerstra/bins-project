@@ -3,7 +3,7 @@ import Modal from './Modal';
 import { fireEvent, render } from '../../test-utils';
 
 const onClose = jest.fn();
-const initialProps = { onClose };
+const initialProps = { onClose, 'data-testid': 'modal' };
 
 const setup = (additionalProps) => render(
   <Modal {...initialProps} {...additionalProps} />
@@ -28,12 +28,12 @@ describe('<Modal />', () => {
 
   it('shows modal when opened', () => {
     const { getByTestId } = setup({ isOpen: true });
-    expect(getByTestId('modal-container')).toBeVisible();
+    expect(getByTestId('modal')).toBeVisible();
   });
 
   it('hides modal when not opened', () => {
     const { getByTestId } = setup({ isOpen: false });
-    expect(getByTestId('modal-container')).not.toBeVisible();
+    expect(getByTestId('modal')).not.toBeVisible();
   });
 
   it('doesn\t render close button when closable is disabled', () => {

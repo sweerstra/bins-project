@@ -22,7 +22,8 @@ function CreateBinModal({ isOpen, onSave, onClose }) {
       title="Create Bin"
       isConfirmable={Boolean(name)}
       onConfirm={saveModal}
-      onCancel={closeModal}>
+      onCancel={closeModal}
+      data-testid="create-bin-modal">
       <Label>
         Name
         <Input
